@@ -3,6 +3,7 @@ using System.DirectoryServices;
 using System.DirectoryServices.AccountManagement;
 using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.ComponentModel;
 
 namespace PCEnvanter
 {
@@ -21,21 +22,20 @@ namespace PCEnvanter
 		public PCEnvanter()
 		{
 			InitializeComponent();
-			List<CPU> cpulist = new List<CPU>();
+			PCEnvanter.cpuList = new List<CPU>();
 
 			string[] lines = File.ReadAllLines(datafile);
 			foreach (string line in lines)
 			{
 				string[] sp = line.Split("\t");
-				cpulist.Add(new CPU() { Name = sp[0], Score = Convert.ToDouble(sp[1]) });
+				PCEnvanter.cpuList.Add(new CPU() { Name = sp[0], Score = Convert.ToDouble(sp[1]) });
 
 			}
 
-			PC pc = getPCInfo("AKN-PC");
-
-			List<string> prefixes = new List<string>() { "P71", "A71", "L71" };
-			//GetPCList(prefixes);
-
+			string plaka = Environment.MachineName.Substring(1, 2);
+			pre1.Text = "P" + plaka;
+			pre2.Text = "A" + plaka;
+			pre3.Text = "L" + plaka;
 		}
 
 		private void GetPCList(List<string> prefixes)
@@ -55,24 +55,43 @@ namespace PCEnvanter
 				}
 			}
 
+			BackgroundWorker backgroundWorker = new BackgroundWorker();
+			backgroundWorker.DoWork += new DoWorkEventHandler(this.Worker_DoWork);
+			backgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(this.Worker_RunWorkerCompleted);
+			backgroundWorker.RunWorkerAsync((object)"P71AKN");
 
-			//foreach (string str in stringList)
+			//foreach (string pcname in pcnamelist)
 			//{
-			//	BackgroundWorker backgroundWorker = new BackgroundWorker();
-			//	backgroundWorker.DoWork += new DoWorkEventHandler(this.Worker_DoWork);
-			//	backgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(this.Worker_RunWorkerCompleted);
-			//	backgroundWorker.RunWorkerAsync((object)str);
+			//    BackgroundWorker backgroundWorker = new BackgroundWorker();
+			//    backgroundWorker.DoWork += new DoWorkEventHandler(this.Worker_DoWork);
+			//    backgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(this.Worker_RunWorkerCompleted);
+			//    backgroundWorker.RunWorkerAsync((object)pcname);
 			//}
-
-
-			//Parallel.ForEach(pcnamelist, pname =>
-			//{
-			//	PC pc = getPCInfo(pname);
-			//});
-			PC pc = getPCInfo("AKN-PC");
-
 		}
 
+		private void Worker_DoWork(object sender, DoWorkEventArgs e)
+		{
+			PC pc = getPCInfo(e.Argument?.ToString() ?? "PC71");
+			e.Result = pc;
+		}
+		private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+		{
+			int stop = 1;
+
+			//this.update_pclistitem((sorgusonuc)e.Result);
+			//Interlocked.Increment(ref this.completeditems);
+
+
+			//if (this.completeditems >= this.itemstocomplete)
+			//{
+			//	this.sb_status.Text = "Tamamlandı.";
+			//	this.sb_progress.Value = 0;
+			//	this.completeditems = 0;
+			//	this.itemstocomplete = 0;
+			//}
+			//else
+			//	this.sb_progress.Value = (int)(100.0 / (double)this.itemstocomplete * (double)this.completeditems);
+		}
 
 		private PC getPCInfo(string pcname)
         {
@@ -383,6 +402,35 @@ namespace PCEnvanter
 			ManagementObjectSearcher searcher = new ManagementObjectSearcher(ms, oq);
 			ManagementObjectCollection queryCollection = searcher.Get();
 			return queryCollection;
+		}
+
+        private void destekAlToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+			MessageBox.Show("Sorularınız için akin.demirtug@csb.gov.tr adresine mesaj gönderebilirsiniz.", "Destek Al");
+        }
+
+        private void yeniPcListesiHazırlaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+			try
+			{
+				List<string> prefixes = new List<string>();
+
+				if (pre1.Text != "")
+					prefixes.Add(pre1.Text);
+				if (pre2.Text != "")
+					prefixes.Add(pre2.Text);
+				if (pre3.Text != "")
+					prefixes.Add(pre3.Text);
+				if (pre4.Text != "")
+					prefixes.Add(pre4.Text);
+
+				GetPCList(prefixes);
+
+			}
+			catch(Exception ex)
+            {
+				MessageBox.Show(ex.ToString(), "Hata");
+            }
 		}
 	}
 }

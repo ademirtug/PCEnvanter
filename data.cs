@@ -78,6 +78,7 @@ namespace PCEnvanter
 				{
 					if (cpu.Model == Model)
 					{
+						_score = cpu.Score;
 						return cpu.Score;
 					}
 				}
