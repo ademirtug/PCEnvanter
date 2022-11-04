@@ -62,8 +62,33 @@ namespace PCEnvanter
 
 	public class CPU
 	{
+		double _score = 0;
+
 		public CPU(){}
 		public CPU(string raw){}
+
+		public double Score
+		{
+			get
+			{
+				if (_score > 0)
+					return _score;
+
+				foreach (var cpu in PCEnvanter.cpuList)
+				{
+					if (cpu.Model == Model)
+					{
+						return cpu.Score;
+					}
+				}
+				return 0;
+
+			}
+			set
+			{
+				_score = value;
+			}
+		}
 
 		public string Manufacturer 
 		{

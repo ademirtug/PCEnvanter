@@ -6,14 +6,31 @@ using System.Diagnostics;
 
 namespace PCEnvanter
 {
-	public partial class Form1 : Form
+	public partial class PCEnvanter : Form
 	{
 		ConcurrentBag<string> pcnamelist = new ConcurrentBag<string>();
 		ConcurrentBag<PC> pclist = new ConcurrentBag<PC>();
+		public static List<CPU> cpuList = new List<CPU>();
 
-		public Form1()
+#if DEBUG
+		string datafile = "../../../data/data.txt";
+#else
+		string datafile = "./data/data.txt"
+#endif
+
+		public PCEnvanter()
 		{
 			InitializeComponent();
+			List<CPU> cpulist = new List<CPU>();
+
+			string[] lines = File.ReadAllLines(datafile);
+			foreach (string line in lines)
+			{
+				string[] sp = line.Split("\t");
+				cpulist.Add(new CPU() { Name = sp[0], Score = Convert.ToDouble(sp[1]) });
+
+			}
+
 			PC pc = getPCInfo("AKN-PC");
 
 			List<string> prefixes = new List<string>() { "P71", "A71", "L71" };

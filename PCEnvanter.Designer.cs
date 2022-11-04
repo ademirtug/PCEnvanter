@@ -1,6 +1,6 @@
 ﻿namespace PCEnvanter
 {
-    partial class Form1
+    partial class PCEnvanter
     {
         /// <summary>
         ///  Required designer variable.
