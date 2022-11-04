@@ -72,30 +72,13 @@ namespace PCEnvanter
 		public VideoCard? VideoCard { get; set; } 
 
 		public string Enclosure { get; set; } = "";
-
-		//public bool RetrieveInfo()
-		//{
-		//    var pt = getPCType(Name);
-		//    Model = pt[0];
-		//    Manufacturer = pt[1];
-		//    User = getPCUser();
-		//    IP = getPCIP();
-		//    Enclosure = getPCEnclosure();
-		//    Cpu = getCPU();
-		//    Disk = getDisk();
-		//    Memory = getMemory();
-		//    Wei = getWei();
-		//    var xe = getMonitor();
-		//    double size = GetMonitorSize();
-		//} 
-
 		public double Fluency
 		{
 			get
 			{
-				double cpuRating = Cpu.Score.Map(3000, 12000, 0, 3);
-				double memoryRating = Memory.Capacity.Map((ulong)Math.Pow(2, 30) * 4, (ulong)Math.Pow(2, 30) * 10, 0, 2);
-				double diskRating = Wei.Disk / 2;
+				double cpuRating = Cpu?.Score.Map(3000, 12000, 0, 3) ?? 1.0;
+				double memoryRating = Memory?.Capacity.Map((ulong)Math.Pow(2, 30) * 4, (ulong)Math.Pow(2, 30) * 10, 0, 2) ?? 1;
+				double diskRating = Wei?.Disk / 2 ?? 2;
 
 				return Math.Max(cpuRating+memoryRating+diskRating, 2.0);
 			}
