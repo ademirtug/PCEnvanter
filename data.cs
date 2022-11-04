@@ -77,7 +77,7 @@ namespace PCEnvanter
 			get
 			{
 				double cpuRating = Cpu?.Score.Map(3000, 12000, 0, 3) ?? 1.0;
-				double memoryRating = Memory?.Capacity.Map((ulong)Math.Pow(2, 30) * 4, (ulong)Math.Pow(2, 30) * 10, 0, 2) ?? 1;
+				double memoryRating = Memory?.Capacity.Map((ulong)Math.Pow(2, 30) * 5, (ulong)Math.Pow(2, 30) * 10, 0, 2) ?? 1;
 				double diskRating = Wei?.Disk / 2 ?? 2;
 
 				return Math.Max(cpuRating+memoryRating+diskRating, 2.0);
@@ -486,10 +486,6 @@ namespace PCEnvanter
 		}
 
 		public string Name { get; set; } = "";
-
-		public int Cores { get; set; } = 0;
-
-		public int Frequency { get; set; } = 0;
 	}
 
 	public class Memory
