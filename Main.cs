@@ -30,7 +30,7 @@ namespace PCEnvanter
 			foreach (string line in lines)
 			{
 				string[] sp = line.Split("\t");
-				Main.cpuList.Add(new CPU() { Name = sp[0], Score = Convert.ToUInt32(sp[1]) });
+				Main.cpuList.Add(new CPU() { Name = sp[0], Score = Convert.ToDouble(sp[1]) });
 			}
 
 		}

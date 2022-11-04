@@ -93,11 +93,11 @@ namespace PCEnvanter
 		{
 			get
 			{
+				double cpuRating = Cpu.Score.Map(3000, 12000, 0, 3);
+				double memoryRating = Memory.Capacity.Map((ulong)Math.Pow(2, 30) * 4, (ulong)Math.Pow(2, 30) * 10, 0, 2);
+				double diskRating = Wei.Disk / 2;
 
-
-
-
-				return 0;
+				return Math.Max(cpuRating+memoryRating+diskRating, 2.0);
 			}
 		}
 
@@ -421,12 +421,12 @@ namespace PCEnvanter
 
 	public class CPU
 	{
-		uint _score = 0;
+		double _score = 0;
 
 		public CPU(){}
 		public CPU(string raw){}
 
-		public uint Score
+		public double Score
 		{
 			get
 			{
@@ -630,22 +630,39 @@ namespace PCEnvanter
 
 			return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
 		}
-		public static int Map(this int value, int fromSource, int toSource, int fromTarget, int toTarget)
+
+		//MAP
+		public static double Map(this int value, int fromSource, int toSource, int fromTarget, int toTarget)
 		{
-			value = Clamp(value, fromSource, toSource);
+			//value = Clamp(value, fromSource, toSource);
+			value = Math.Min(value, toSource);
 			return (value - fromSource) / (toSource - fromSource) * (toTarget - fromTarget) + fromTarget;
 		}
 		public static double Map(this double value, double fromSource, double toSource, double fromTarget, double toTarget)
 		{
-			value = Clamp(value, fromSource, toSource);
+			//value = Clamp(value, fromSource, toSource);
+			value = Math.Min(value, toSource);
 			return (value - fromSource) / (toSource - fromSource) * (toTarget - fromTarget) + fromTarget;
 		}
 
+		public static double Map(this ulong value, ulong fromSource, ulong toSource, ulong fromTarget, ulong toTarget)
+		{
+			//value = Clamp(value, fromSource, toSource);
+			value = Math.Min(value, toSource);
+			return (value - fromSource) / (toSource - fromSource) * (toTarget - fromTarget) + fromTarget;
+		}
+
+
+		//CLAMP
 		public static int Clamp(int value, int min, int max)
 		{
 			return (value < min) ? min : (value > max) ? max : value;
 		}
 		public static double Clamp(double value, double min, double max)
+		{
+			return (value < min) ? min : (value > max) ? max : value;
+		}
+		public static ulong Clamp(ulong value, ulong min, ulong max)
 		{
 			return (value < min) ? min : (value > max) ? max : value;
 		}

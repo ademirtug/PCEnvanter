@@ -86,17 +86,13 @@ namespace PCEnvanter
 			lvi.SubItems.Add(pc.User?.Name);
 			lvi.SubItems.Add(pc.User?.Title);
 			lvi.SubItems.Add(pc.Cpu?.Score.ToString());
-			lvi.SubItems.Add("Ferahlık");
+			lvi.SubItems.Add(pc.Fluency.ToString());
 			lvi.SubItems.Add(pc.Model);
 			lvi.SubItems.Add(pc.Enclosure);
 			lvi.SubItems.Add(pc.Cpu?.Model);
 			lvi.SubItems.Add(pc.Memory?.ToString());
 			lvi.SubItems.Add(pc.Disk?.ToString());
 			lvi.SubItems.Add(pc.VideoCard?.Name);
-
-			double d = 25427;
-			double md = d.Map(3000, 15000, 0, 10);
-
 
 			lock (pcl)
 			{

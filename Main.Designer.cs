@@ -94,7 +94,7 @@
 			this.IsMdiContainer = true;
 			this.MainMenuStrip = this.menuStrip1;
 			this.Name = "Main";
-			this.Text = "PC Envanter";
+			this.Text = "PC Envanter v5.0";
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
 			this.ResumeLayout(false);

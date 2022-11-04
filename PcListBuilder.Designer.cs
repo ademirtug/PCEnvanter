@@ -41,11 +41,11 @@
 			this.PP = new System.Windows.Forms.ColumnHeader();
 			this.FE = new System.Windows.Forms.ColumnHeader();
 			this.Brand = new System.Windows.Forms.ColumnHeader();
+			this.Enclosure = new System.Windows.Forms.ColumnHeader();
 			this.CPU = new System.Windows.Forms.ColumnHeader();
 			this.Memory = new System.Windows.Forms.ColumnHeader();
 			this.Disk = new System.Windows.Forms.ColumnHeader();
 			this.Graphics = new System.Windows.Forms.ColumnHeader();
-			this.Enclosure = new System.Windows.Forms.ColumnHeader();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -98,7 +98,9 @@
             this.Disk,
             this.Graphics});
 			this.pcl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.pcl.FullRowSelect = true;
 			this.pcl.Location = new System.Drawing.Point(0, 24);
+			this.pcl.MultiSelect = false;
 			this.pcl.Name = "pcl";
 			this.pcl.Size = new System.Drawing.Size(1492, 739);
 			this.pcl.TabIndex = 1;
@@ -113,7 +115,7 @@
 			// PcName
 			// 
 			this.PcName.Text = "Bilgisayar Adı";
-			this.PcName.Width = 200;
+			this.PcName.Width = 150;
 			// 
 			// IP
 			// 
@@ -122,7 +124,7 @@
 			// 
 			// User
 			// 
-			this.User.Text = "User";
+			this.User.Text = "Kullanıcı";
 			this.User.Width = 200;
 			// 
 			// Title
@@ -145,6 +147,11 @@
 			this.Brand.Text = "Marka/Model";
 			this.Brand.Width = 100;
 			// 
+			// Enclosure
+			// 
+			this.Enclosure.Text = "Kasa Tipi";
+			this.Enclosure.Width = 100;
+			// 
 			// CPU
 			// 
 			this.CPU.Text = "İşlemci";
@@ -165,11 +172,6 @@
 			this.Graphics.Text = "Ekran Kartı";
 			this.Graphics.Width = 140;
 			// 
-			// Enclosure
-			// 
-			this.Enclosure.Text = "Kasa Tipi";
-			this.Enclosure.Width = 100;
-			// 
 			// PcListBuilder
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -180,7 +182,7 @@
 			this.MainMenuStrip = this.menuStrip1;
 			this.Name = "PcListBuilder";
 			this.ShowInTaskbar = false;
-			this.Text = "PcListBuilder";
+			this.Text = "Pc Liste Oluşturucu";
 			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
