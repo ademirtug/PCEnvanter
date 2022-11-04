@@ -14,8 +14,10 @@ namespace PCEnvanter
 		public Form1()
 		{
 			InitializeComponent();
+			PC pc = getPCInfo("AKN-PC");
+
 			List<string> prefixes = new List<string>() { "P71", "A71", "L71" };
-			GetPCList(prefixes);
+			//GetPCList(prefixes);
 
 		}
 
@@ -50,7 +52,7 @@ namespace PCEnvanter
 			//{
 			//	PC pc = getPCInfo(pname);
 			//});
-			PC pc = getPCInfo("P71AKN");
+			PC pc = getPCInfo("AKN-PC");
 
 		}
 

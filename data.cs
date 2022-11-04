@@ -88,15 +88,30 @@ namespace PCEnvanter
 			{
 				if (Name == "")
 					return "";
+				try
+				{
+					string[] sp = Name.Split(" ");
 
-				string[] intel = { "i3", "i5", "i7", "i9" };
-                foreach (string processor in intel)
-                {
-					int index = Name.IndexOf(processor);
-					if (index > -1)
-						return Name.Substring(index, Name.IndexOf(" ", index) - index).Trim();
+					string[] intel = { "i3", "i5", "i7", "i9" };
+					foreach (string processor in intel)
+					{
+						int index = Name.IndexOf(processor);
+						if (index > -1)
+							return Name.Substring(index, Name.IndexOf(" ", index) - index).Trim();
+					}
+
+					for (int i = 0; i < sp.Length; i++)
+					{
+						if (sp[i].ToUpper().Contains("AMD"))
+						{
+							return $"{sp[i + 1]} {sp[i + 2]} {sp[i + 3]}";
+						}
+					}
 				}
+				catch (Exception)
+				{
 
+				}
 				return Name;
 			}
 
