@@ -1,18 +1,9 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.DirectoryServices.AccountManagement;
 using System.Globalization;
-using System.Linq;
 using System.Management;
 using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using System.DirectoryServices;
-using NPOI.SS.Formula.Functions;
 using System.Text.Json;
 
 namespace PCEnvanter
@@ -21,12 +12,12 @@ namespace PCEnvanter
 	public class PcList
 	{
 		public DateTime TimeStamp { get; set; } = DateTime.Now;
-		public string Prefix { get; set; } = "";
+		public List<string> PrefixList { get; set; } = new List<string>();
 		public List<PC> pcl { get; set; } = new List<PC>();
 
 		public void FlushAsJson(string path = "", bool sort = true)
 		{
-			path = path == "" ? Main.dpath + "glexicon.json" : path;
+			path = path == "" ? Main.dpath + "pc_liste.json" : path;
 
 			//C:\Users\akn\Desktop\data
 			JsonSerializerOptions options = new JsonSerializerOptions { WriteIndented = true };
@@ -39,7 +30,7 @@ namespace PCEnvanter
 
 		public static PcList LoadFromFile(string path = "")
 		{
-			path = path == "" ? Main.dpath + "glexicon.json" : path;
+			path = path == "" ? Main.dpath + "pc_liste.json" : path;
 			if (File.Exists(path))
 				return JsonSerializer.Deserialize<PcList>(File.ReadAllText(path)) ?? new PcList();
 			return new PcList();

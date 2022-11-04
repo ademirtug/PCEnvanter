@@ -32,7 +32,7 @@
 			this.dosyaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.kaydetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.excelDosyasınaÇevirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.pcl = new System.Windows.Forms.ListView();
+			this.lv_pcl = new System.Windows.Forms.ListView();
 			this.No = new System.Windows.Forms.ColumnHeader();
 			this.PcName = new System.Windows.Forms.ColumnHeader();
 			this.IP = new System.Windows.Forms.ColumnHeader();
@@ -74,6 +74,7 @@
 			this.kaydetToolStripMenuItem.Name = "kaydetToolStripMenuItem";
 			this.kaydetToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
 			this.kaydetToolStripMenuItem.Text = "Kaydet";
+			this.kaydetToolStripMenuItem.Click += new System.EventHandler(this.kaydetToolStripMenuItem_Click);
 			// 
 			// excelDosyasınaÇevirToolStripMenuItem
 			// 
@@ -81,9 +82,9 @@
 			this.excelDosyasınaÇevirToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
 			this.excelDosyasınaÇevirToolStripMenuItem.Text = "Excel Dosyasına Çevir";
 			// 
-			// pcl
+			// lv_pcl
 			// 
-			this.pcl.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+			this.lv_pcl.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.No,
             this.PcName,
             this.IP,
@@ -97,15 +98,15 @@
             this.Memory,
             this.Disk,
             this.Graphics});
-			this.pcl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.pcl.FullRowSelect = true;
-			this.pcl.Location = new System.Drawing.Point(0, 24);
-			this.pcl.MultiSelect = false;
-			this.pcl.Name = "pcl";
-			this.pcl.Size = new System.Drawing.Size(1492, 739);
-			this.pcl.TabIndex = 1;
-			this.pcl.UseCompatibleStateImageBehavior = false;
-			this.pcl.View = System.Windows.Forms.View.Details;
+			this.lv_pcl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.lv_pcl.FullRowSelect = true;
+			this.lv_pcl.Location = new System.Drawing.Point(0, 24);
+			this.lv_pcl.MultiSelect = false;
+			this.lv_pcl.Name = "lv_pcl";
+			this.lv_pcl.Size = new System.Drawing.Size(1492, 739);
+			this.lv_pcl.TabIndex = 1;
+			this.lv_pcl.UseCompatibleStateImageBehavior = false;
+			this.lv_pcl.View = System.Windows.Forms.View.Details;
 			// 
 			// No
 			// 
@@ -177,7 +178,7 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1492, 763);
-			this.Controls.Add(this.pcl);
+			this.Controls.Add(this.lv_pcl);
 			this.Controls.Add(this.menuStrip1);
 			this.MainMenuStrip = this.menuStrip1;
 			this.Name = "PcListBuilder";
@@ -197,7 +198,7 @@
 		private ToolStripMenuItem dosyaToolStripMenuItem;
 		private ToolStripMenuItem kaydetToolStripMenuItem;
 		private ToolStripMenuItem excelDosyasınaÇevirToolStripMenuItem;
-		private ListView pcl;
+		private ListView lv_pcl;
 		private ColumnHeader No;
 		private ColumnHeader PcName;
 		private ColumnHeader IP;

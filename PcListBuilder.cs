@@ -14,7 +14,9 @@ namespace PCEnvanter
 {
 	public partial class PcListBuilder : Form
 	{
-		List<string> prefixList = new List<string>();
+		PcList pcl = new PcList();
+
+		string fileName = "";
 		int pclc = 0;
 		public PcListBuilder()
 		{
@@ -22,16 +24,16 @@ namespace PCEnvanter
 		}
 		public PcListBuilder(List<string> prefixList)
 		{
-			this.prefixList = prefixList;
-			InitializeComponent();
+			pcl.PrefixList = prefixList;
 
+			InitializeComponent();
 
 			//List<string> pcl = GetPCList(prefixList);
 
-			List<string> pcl = new List<string>();
-			pcl.Add("AKN-PC");
+			List<string> pcnameslist = new List<string>();
+			pcnameslist.Add("AKN-PC");
 
-			foreach (string pcname in pcl)
+			foreach (string pcname in pcnameslist)
 			{
 				BackgroundWorker backgroundWorker = new BackgroundWorker();
 				backgroundWorker.DoWork += new DoWorkEventHandler(this.Worker_DoWork);
@@ -94,10 +96,15 @@ namespace PCEnvanter
 			lvi.SubItems.Add(pc.Disk?.ToString());
 			lvi.SubItems.Add(pc.VideoCard?.Name);
 
-			lock (pcl)
+			lock (lv_pcl)
 			{
-				pcl.Items.Add(lvi);
+				lv_pcl.Items.Add(lvi);
 			}
+		}
+
+		private void kaydetToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			
 		}
 	}
 }

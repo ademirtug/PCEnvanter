@@ -34,6 +34,7 @@
 			this.varOlanListeyiTamamlaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.yardımToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.destekAlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -52,7 +53,8 @@
 			// 
 			this.dosyaToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.prepareNewPcList,
-            this.varOlanListeyiTamamlaToolStripMenuItem});
+            this.varOlanListeyiTamamlaToolStripMenuItem,
+            this.toolStripMenuItem1});
 			this.dosyaToolStripMenuItem.Name = "dosyaToolStripMenuItem";
 			this.dosyaToolStripMenuItem.Size = new System.Drawing.Size(51, 20);
 			this.dosyaToolStripMenuItem.Text = "Dosya";
@@ -85,6 +87,11 @@
 			this.destekAlToolStripMenuItem.Text = "Destek Al";
 			this.destekAlToolStripMenuItem.Click += new System.EventHandler(this.destekAlToolStripMenuItem_Click);
 			// 
+			// toolStripMenuItem1
+			// 
+			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+			this.toolStripMenuItem1.Size = new System.Drawing.Size(202, 6);
+			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -110,5 +117,6 @@
 		private ToolStripMenuItem dosyaToolStripMenuItem;
 		private ToolStripMenuItem prepareNewPcList;
 		private ToolStripMenuItem varOlanListeyiTamamlaToolStripMenuItem;
+		private ToolStripSeparator toolStripMenuItem1;
 	}
 }
