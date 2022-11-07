@@ -30,11 +30,14 @@
         {
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.dosyaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.yeniToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.prepareNewPcList = new System.Windows.Forms.ToolStripMenuItem();
+			this.açToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.pCListeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.varOlanListeyiTamamlaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
 			this.yardımToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.destekAlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -52,25 +55,54 @@
 			// dosyaToolStripMenuItem
 			// 
 			this.dosyaToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.prepareNewPcList,
+            this.yeniToolStripMenuItem,
+            this.açToolStripMenuItem,
             this.varOlanListeyiTamamlaToolStripMenuItem,
             this.toolStripMenuItem1});
 			this.dosyaToolStripMenuItem.Name = "dosyaToolStripMenuItem";
 			this.dosyaToolStripMenuItem.Size = new System.Drawing.Size(51, 20);
 			this.dosyaToolStripMenuItem.Text = "Dosya";
 			// 
+			// yeniToolStripMenuItem
+			// 
+			this.yeniToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.prepareNewPcList});
+			this.yeniToolStripMenuItem.Name = "yeniToolStripMenuItem";
+			this.yeniToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+			this.yeniToolStripMenuItem.Text = "Yeni";
+			// 
 			// prepareNewPcList
 			// 
 			this.prepareNewPcList.Name = "prepareNewPcList";
-			this.prepareNewPcList.Size = new System.Drawing.Size(205, 22);
-			this.prepareNewPcList.Text = "Yeni PC Listesi Hazırla";
+			this.prepareNewPcList.Size = new System.Drawing.Size(180, 22);
+			this.prepareNewPcList.Text = "PC Listesi Hazırla";
 			this.prepareNewPcList.Click += new System.EventHandler(this.yeniPcListesiHazırlaToolStripMenuItem_Click);
+			// 
+			// açToolStripMenuItem
+			// 
+			this.açToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.pCListeToolStripMenuItem});
+			this.açToolStripMenuItem.Name = "açToolStripMenuItem";
+			this.açToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+			this.açToolStripMenuItem.Text = "Aç";
+			// 
+			// pCListeToolStripMenuItem
+			// 
+			this.pCListeToolStripMenuItem.Name = "pCListeToolStripMenuItem";
+			this.pCListeToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+			this.pCListeToolStripMenuItem.Text = "PC Liste";
+			this.pCListeToolStripMenuItem.Click += new System.EventHandler(this.pCListeToolStripMenuItem_Click);
 			// 
 			// varOlanListeyiTamamlaToolStripMenuItem
 			// 
 			this.varOlanListeyiTamamlaToolStripMenuItem.Name = "varOlanListeyiTamamlaToolStripMenuItem";
 			this.varOlanListeyiTamamlaToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
 			this.varOlanListeyiTamamlaToolStripMenuItem.Text = "Var Olan Listeyi Tamamla";
+			// 
+			// toolStripMenuItem1
+			// 
+			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+			this.toolStripMenuItem1.Size = new System.Drawing.Size(202, 6);
 			// 
 			// yardımToolStripMenuItem
 			// 
@@ -86,11 +118,6 @@
 			this.destekAlToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
 			this.destekAlToolStripMenuItem.Text = "Destek Al";
 			this.destekAlToolStripMenuItem.Click += new System.EventHandler(this.destekAlToolStripMenuItem_Click);
-			// 
-			// toolStripMenuItem1
-			// 
-			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-			this.toolStripMenuItem1.Size = new System.Drawing.Size(202, 6);
 			// 
 			// Main
 			// 
@@ -115,8 +142,11 @@
         private ToolStripMenuItem yardımToolStripMenuItem;
         private ToolStripMenuItem destekAlToolStripMenuItem;
 		private ToolStripMenuItem dosyaToolStripMenuItem;
-		private ToolStripMenuItem prepareNewPcList;
 		private ToolStripMenuItem varOlanListeyiTamamlaToolStripMenuItem;
 		private ToolStripSeparator toolStripMenuItem1;
+		private ToolStripMenuItem yeniToolStripMenuItem;
+		private ToolStripMenuItem açToolStripMenuItem;
+		private ToolStripMenuItem pCListeToolStripMenuItem;
+		private ToolStripMenuItem prepareNewPcList;
 	}
 }

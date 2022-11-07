@@ -58,5 +58,18 @@ namespace PCEnvanter
 			}
 
 		}
+
+		private void pCListeToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog ofd = new OpenFileDialog();
+
+
+			if (ofd.ShowDialog() != DialogResult.OK)
+				return;
+
+			PcListBuilder pcb = new PcListBuilder(ofd.FileName);
+			pcb.MdiParent = this;
+			pcb.Show();
+		}
 	}
 }

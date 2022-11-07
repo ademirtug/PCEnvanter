@@ -5,6 +5,7 @@ using System.Management;
 using System.Text;
 using System.DirectoryServices;
 using System.Text.Json;
+using System.Collections.Concurrent;
 
 namespace PCEnvanter
 {

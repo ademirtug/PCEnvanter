@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
 using System.ComponentModel;
-using System.Data;
 using System.DirectoryServices.AccountManagement;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+
 
 namespace PCEnvanter
 {
@@ -22,11 +15,19 @@ namespace PCEnvanter
 		{
 			InitializeComponent();
 		}
-		public PcListBuilder(List<string> prefixList)
+		public PcListBuilder(string fileName) : this()
+		{
+			pcl = PcList.LoadFromFile(fileName);
+
+			foreach(PC pc in pcl.pcl)
+			{
+				addToListView(pc);
+			}
+		}
+
+		public PcListBuilder(List<string> prefixList) : this()
 		{
 			pcl.PrefixList = prefixList;
-
-			InitializeComponent();
 
 			//List<string> pcl = GetPCList(prefixList);
 
@@ -73,6 +74,9 @@ namespace PCEnvanter
 		{
 			PC pc = new PC() { Name = e.Argument?.ToString() ?? "PC71" };
 			pc.RetrieveInfo();
+			lock(pcl)
+				pcl.pcl.Add(pc);
+
 			e.Result = pc;
 		}
 		private void Worker_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
@@ -81,7 +85,12 @@ namespace PCEnvanter
 				return;
 			
 			PC? pc = (PC)e.Result;
+			addToListView(pc);
 
+		}
+
+		void addToListView(PC pc)
+		{
 			ListViewItem lvi = new ListViewItem(Interlocked.Increment(ref pclc).ToString());
 			lvi.SubItems.Add(pc.Name);
 			lvi.SubItems.Add(pc.IP);
@@ -94,6 +103,7 @@ namespace PCEnvanter
 			lvi.SubItems.Add(pc.Cpu?.Model);
 			lvi.SubItems.Add(pc.Memory?.ToString());
 			lvi.SubItems.Add(pc.Disk?.ToString());
+			lvi.SubItems.Add(pc.Monitor?.Size.ToString("F1") + " inç" ?? "");
 			lvi.SubItems.Add(pc.VideoCard?.Name);
 
 			lock (lv_pcl)
@@ -101,10 +111,18 @@ namespace PCEnvanter
 				lv_pcl.Items.Add(lvi);
 			}
 		}
-
 		private void kaydetToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			
+			if (fileName == "")
+			{
+				SaveFileDialog sfd = new SaveFileDialog();
+				if (sfd.ShowDialog() != DialogResult.OK)
+					return;
+
+				fileName = sfd.FileName;
+			}
+
+			pcl.FlushAsJson(fileName);
 		}
 	}
 }

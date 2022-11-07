@@ -45,6 +45,7 @@
 			this.CPU = new System.Windows.Forms.ColumnHeader();
 			this.Memory = new System.Windows.Forms.ColumnHeader();
 			this.Disk = new System.Windows.Forms.ColumnHeader();
+			this.Monitor = new System.Windows.Forms.ColumnHeader();
 			this.Graphics = new System.Windows.Forms.ColumnHeader();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
@@ -73,7 +74,7 @@
 			// 
 			this.kaydetToolStripMenuItem.Name = "kaydetToolStripMenuItem";
 			this.kaydetToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-			this.kaydetToolStripMenuItem.Text = "Kaydet";
+			this.kaydetToolStripMenuItem.Text = "Kaydet...";
 			this.kaydetToolStripMenuItem.Click += new System.EventHandler(this.kaydetToolStripMenuItem_Click);
 			// 
 			// excelDosyasınaÇevirToolStripMenuItem
@@ -97,6 +98,7 @@
             this.CPU,
             this.Memory,
             this.Disk,
+            this.Monitor,
             this.Graphics});
 			this.lv_pcl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.lv_pcl.FullRowSelect = true;
@@ -168,6 +170,10 @@
 			this.Disk.Text = "Disk";
 			this.Disk.Width = 100;
 			// 
+			// Monitor
+			// 
+			this.Monitor.Text = "Monitör";
+			// 
 			// Graphics
 			// 
 			this.Graphics.Text = "Ekran Kartı";
@@ -212,5 +218,6 @@
 		private ColumnHeader Disk;
 		private ColumnHeader Graphics;
 		private ColumnHeader Enclosure;
+		private ColumnHeader Monitor;
 	}
 }
