@@ -8,6 +8,7 @@ namespace PCEnvanter
 	public partial class PcListBuilder : Form
 	{
 		PcList pcl = new PcList();
+		ConcurrentQueue<PC> cpc = new ConcurrentQueue<PC>();
 
 		string fileName = "";
 		int pclc = 0;
@@ -28,20 +29,90 @@ namespace PCEnvanter
 		public PcListBuilder(List<string> prefixList) : this()
 		{
 			pcl.PrefixList = prefixList;
+			ThreadPool.SetMinThreads(20, 20);
 
-			//List<string> pcl = GetPCList(prefixList);
 
-			List<string> pcnameslist = new List<string>();
-			pcnameslist.Add("AKN-PC");
+			//List<string> pcnameslist = GetPCList(prefixList);
+            List<string> pcnameslist = new List<string>();
+            pcnameslist.Add("P71KIRIKKALE33");
 
-			foreach (string pcname in pcnameslist)
-			{
-				BackgroundWorker backgroundWorker = new BackgroundWorker();
-				backgroundWorker.DoWork += new DoWorkEventHandler(this.Worker_DoWork);
-				backgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(this.Worker_RunWorkerCompleted);
-				backgroundWorker.RunWorkerAsync((object)pcname);
-			}
-		}
+            //Method 1
+            //foreach (string pcname in pcnameslist)
+            //{
+            //    BackgroundWorker backgroundWorker = new BackgroundWorker();
+            //    backgroundWorker.DoWork += new DoWorkEventHandler(this.Worker_DoWork);
+            //    backgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(this.Worker_RunWorkerCompleted);
+            //    backgroundWorker.RunWorkerAsync((object)pcname);
+            //}
+
+            //Method 2
+            //int c = 0;
+            //         foreach (string pcname in pcnameslist)
+            //         {
+            //	if (++c == 20)
+            //		break;
+
+            //	Task.Run(() =>
+            //             {
+            //		PC pc = new PC() { Name = pcname ?? "PC71" };
+            //		pc.RetrieveInfo();
+            //                 lock (pcl)
+            //                 {
+            //                     pcl.pcl.Add(pc);
+            //			//Dispatcher.Invoke(new Action(() => { addToListView(pc); }));
+            //		 this.Invoke(()=> addToListView(pc));
+            //		}
+            //             });
+            //}
+
+            //Method 3
+            //BackgroundWorker rw = new BackgroundWorker();
+            //rw.DoWork += new DoWorkEventHandler(this.RefreshWorker_DoWork);
+            ////backgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(this.Worker_RunWorkerCompleted);
+            //rw.RunWorkerAsync();
+
+            //int c = 0;
+            //foreach (string pcname in pcnameslist)
+            //{
+            //    Task.Run(() =>
+            //    {
+            //        PC pc = new PC() { Name = pcname ?? "PC71" };
+            //        pc.RetrieveInfo();
+
+            //        lock (pcl)
+            //        {
+            //            pcl.pcl.Add(pc);
+            //        }
+            //        cpc.Enqueue(pc);
+
+            //    });
+            //}
+
+
+            //Method 4
+            BackgroundWorker rw = new BackgroundWorker();
+            rw.DoWork += new DoWorkEventHandler(this.RefreshWorker_DoWork);
+            //backgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(this.Worker_RunWorkerCompleted);
+            rw.RunWorkerAsync();
+
+            int c = 0;
+            foreach (string pcname in pcnameslist)
+            {
+                new Thread(() =>
+                         {
+                             PC pc = new PC() { Name = pcname ?? "PC71" };
+                             pc.RetrieveInfo();
+
+                             lock (pcl)
+                             {
+                                 pcl.pcl.Add(pc);
+                             }
+                             cpc.Enqueue(pc);
+                         }).Start();
+            }
+
+
+        }
 
 		private List<string> GetPCList(List<string> prefixes)
 		{
@@ -68,6 +139,21 @@ namespace PCEnvanter
 #else
 			return new PrincipalContext(ContextType.Domain, "csb.local");
 #endif
+		}
+
+		private void RefreshWorker_DoWork(object? sender, DoWorkEventArgs e)
+		{
+            while (true)
+            {
+				Thread.Sleep(5000);
+				if(cpc.Count > 0)
+                {
+					PC? pc;
+					if (cpc.TryDequeue(out pc))
+						this.Invoke(() => addToListView(pc));
+
+				}
+            }
 		}
 
 		private void Worker_DoWork(object? sender, DoWorkEventArgs e)
@@ -97,7 +183,7 @@ namespace PCEnvanter
 			lvi.SubItems.Add(pc.User?.Name);
 			lvi.SubItems.Add(pc.User?.Title);
 			lvi.SubItems.Add(pc.Cpu?.Score.ToString());
-			lvi.SubItems.Add(pc.Fluency.ToString());
+			lvi.SubItems.Add(pc.Fluency.ToString("F1"));
 			lvi.SubItems.Add(pc.Model);
 			lvi.SubItems.Add(pc.Enclosure);
 			lvi.SubItems.Add(pc.Cpu?.Model);

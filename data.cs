@@ -68,9 +68,12 @@ namespace PCEnvanter
 		{
 			get
 			{
+				if (Wei?.Disk == 0)
+					return 0;
+
 				double cpuRating = Cpu?.Score.Map(3000, 12000, 0, 3) ?? 1.0;
 				double memoryRating = Memory?.Capacity.Map((ulong)Math.Pow(2, 30) * 5, (ulong)Math.Pow(2, 30) * 10, 0, 2) ?? 1;
-				double diskRating = Wei?.Disk / 2 ?? 2;
+				double diskRating = Wei?.Disk / 2 ?? 0;
 
 				return Math.Max(cpuRating+memoryRating+diskRating, 2.0);
 			}
@@ -78,12 +81,15 @@ namespace PCEnvanter
 
 		public bool RetrieveInfo()
 		{
+			IP = getPCIP();
+			if (IP == "0.0.0.0")
+				return false;
+
 			var pt = getPCType();
 			Model = pt[0];
 			Manufacturer = pt[1];
 			VideoCard = getVideoCard();
 			User = getPCUser();
-			IP = getPCIP();
 			Enclosure = getPCEnclosure();
 			Cpu = getCPU();
 			Disk = getDisk();
