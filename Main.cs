@@ -9,8 +9,6 @@ namespace PCEnvanter
 {
 	public partial class Main : Form
 	{
-
-		ConcurrentBag<PC> pclist = new ConcurrentBag<PC>();
 		public static List<CPU> cpuList = new List<CPU>();
 
 #if DEBUG
@@ -52,7 +50,7 @@ namespace PCEnvanter
 				pcb.MdiParent = this;
 				pcb.Show();
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 
 			}
@@ -62,8 +60,6 @@ namespace PCEnvanter
 		private void pCListeToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			OpenFileDialog ofd = new OpenFileDialog();
-
-
 			if (ofd.ShowDialog() != DialogResult.OK)
 				return;
 

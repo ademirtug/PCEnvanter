@@ -119,7 +119,7 @@ namespace PCEnvanter
 					r[1] = m["Manufacturer"]?.ToString() ?? "";
 				}
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 			}
 			return r;
@@ -135,7 +135,7 @@ namespace PCEnvanter
 					vc.Name = m["Name"]?.ToString() ?? "";
 				}
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 			}
 			return vc;
@@ -172,7 +172,7 @@ namespace PCEnvanter
 					}
 				}
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 				return null;
 			}
@@ -197,7 +197,7 @@ namespace PCEnvanter
 					return m["IPAddress"] == null ? "0.0.0.0" : ((string[])m["IPAddress"])[0];
 				}
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 			}
 			return "0.0.0.0";
@@ -229,7 +229,7 @@ namespace PCEnvanter
 					}
 				}
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 			}
 			return "-";
@@ -247,7 +247,7 @@ namespace PCEnvanter
 					Cpu.Name = m["Name"]?.ToString() ?? "";
 				}
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 				Cpu = null;
 			}
@@ -273,7 +273,7 @@ namespace PCEnvanter
 
 				}
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 			}
 			mo.Size = GetMonitorSize();
@@ -313,7 +313,7 @@ namespace PCEnvanter
 					d.Capacity += m["Size"] != null ? Convert.ToUInt64(m["Size"].ToString()) : 1UL;
 				}
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 			}
 			return d;
@@ -353,7 +353,7 @@ namespace PCEnvanter
 					w.Memory = Convert.ToDouble(m["MemoryScore"]?.ToString() ?? "0");
 				}
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 
 			}

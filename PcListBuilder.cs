@@ -50,18 +50,24 @@ namespace PCEnvanter
 			{
 				new Thread(() =>
 				{
-					PC pc = new PC() { Name = pcname ?? "PC71" };
-					pc.RetrieveInfo();
-
-					lock (pcl)
+					try
 					{
-						pcl.pcl.Add(pc);
-						cpc.Enqueue(pc);
+						PC pc = new PC() { Name = pcname ?? "PC71" };
+						pc.RetrieveInfo();
 
-						PC? pcx;
-						while (cpc.TryDequeue(out pcx))
-							addToListViewCache(pcx);
-					}			
+						lock (pcl)
+						{
+							pcl.pcl.Add(pc);
+							cpc.Enqueue(pc);
+
+							PC? pcx;
+							while (cpc.TryDequeue(out pcx))
+								addToListViewCache(pcx);
+						}
+					}catch(Exception ex)
+                    {
+						int stop = 1;
+                    }
 				}).Start();
 			}
 		}
@@ -105,77 +111,25 @@ namespace PCEnvanter
         {
 			ListViewItem lvi = new ListViewItem(Interlocked.Increment(ref pclc).ToString());
 			lvi.SubItems.Add(pc.Name);
+			lvi.SubItems.Add(pc.IP == "0.0.0.0" ? "": pc.IP);
+			lvi.SubItems.Add(pc.User?.Name);
+			lvi.SubItems.Add(pc.User?.Title);
+			lvi.SubItems.Add(pc.Cpu?.Score.ToString());
+			lvi.SubItems.Add(pc.IP == "0.0.0.0" ? "" : pc.Fluency.ToString("F1"));
+			lvi.SubItems.Add(pc.Model);
+			lvi.SubItems.Add(pc.Enclosure);
+			lvi.SubItems.Add(pc.Cpu?.Model);
+			lvi.SubItems.Add(pc.Memory?.ToString());
+			lvi.SubItems.Add(pc.Disk?.ToString());
+			lvi.SubItems.Add(pc.Monitor?.Size.ToString("F1").Length > 0 ? pc.Monitor?.Size.ToString("F1") + " inç" : "");
+			lvi.SubItems.Add(pc.VideoCard?.Name);
 
-			//if (pc.IP != "0.0.0.0")
-			//{
-				lvi.SubItems.Add(pc.IP == "0.0.0.0" ? "": pc.IP);
-				lvi.SubItems.Add(pc.User?.Name);
-				lvi.SubItems.Add(pc.User?.Title);
-				lvi.SubItems.Add(pc.Cpu?.Score.ToString());
-				lvi.SubItems.Add(pc.IP == "0.0.0.0" ? "" : pc.Fluency.ToString("F1"));
-				lvi.SubItems.Add(pc.Model);
-				lvi.SubItems.Add(pc.Enclosure);
-				lvi.SubItems.Add(pc.Cpu?.Model);
-				lvi.SubItems.Add(pc.Memory?.ToString());
-				lvi.SubItems.Add(pc.Disk?.ToString());
-				lvi.SubItems.Add(pc.Monitor?.Size.ToString("F1").Length > 0 ? pc.Monitor?.Size.ToString("F1") + " inç" : "");
-				lvi.SubItems.Add(pc.VideoCard?.Name);
-			//}
 			lvil.Add(lvi);
-			lvil = lvil.OrderBy(x => Convert.ToInt32(x.SubItems[0].Text)).ToList();
-			this.Invoke(() => { lv_pcl.VirtualListSize = lvil.Count;});
-		
-
-            //lv_pcl.Invoke(()=> { lv_pcl.VirtualListSize = lvil.Count; });
-
+			
+			//lvil = lvil.OrderBy(x => Convert.ToInt32(x.SubItems[0].Text)).ToList();
+			lv_pcl.Invoke(() => { lv_pcl.VirtualListSize = lvil.Count;});
         }
 
-        void addToListView(PC pc)
-		{
-			ListViewItem lvi = new ListViewItem(Interlocked.Increment(ref pclc).ToString());
-			lvi.SubItems.Add(pc.Name);
-
-			if (pc.IP != "0.0.0.0")
-			{
-				lvi.SubItems.Add(pc.IP);
-				lvi.SubItems.Add(pc.User?.Name);
-				lvi.SubItems.Add(pc.User?.Title);
-				lvi.SubItems.Add(pc.Cpu?.Score.ToString());
-				lvi.SubItems.Add(pc.Fluency.ToString("F1"));
-				lvi.SubItems.Add(pc.Model);
-				lvi.SubItems.Add(pc.Enclosure);
-				lvi.SubItems.Add(pc.Cpu?.Model);
-				lvi.SubItems.Add(pc.Memory?.ToString());
-				lvi.SubItems.Add(pc.Disk?.ToString());
-				lvi.SubItems.Add(pc.Monitor?.Size.ToString("F1") + " inç" ?? "");
-				lvi.SubItems.Add(pc.VideoCard?.Name);
-			}
-			lv_pcl.Items.Add(lvi);
-		}
-
-		void addToListViewSafe(PC pc)
-		{
-			ListViewItem lvi = new ListViewItem(Interlocked.Increment(ref pclc).ToString());
-			lvi.SubItems.Add(pc.Name);
-
-			if (pc.IP != "0.0.0.0")
-			{
-				lvi.SubItems.Add(pc.IP);
-				lvi.SubItems.Add(pc.User?.Name);
-				lvi.SubItems.Add(pc.User?.Title);
-				lvi.SubItems.Add(pc.Cpu?.Score.ToString());
-				lvi.SubItems.Add(pc.Fluency.ToString("F1"));
-				lvi.SubItems.Add(pc.Model);
-				lvi.SubItems.Add(pc.Enclosure);
-				lvi.SubItems.Add(pc.Cpu?.Model);
-				lvi.SubItems.Add(pc.Memory?.ToString());
-				lvi.SubItems.Add(pc.Disk?.ToString());
-				lvi.SubItems.Add(pc.Monitor?.Size.ToString("F1") + " inç" ?? "");
-				lvi.SubItems.Add(pc.VideoCard?.Name);
-			}
-			lv_pcl.Invoke(() => lv_pcl.Items.Add(lvi));
-            progressBar.GetCurrentParent().Invoke(() => { progressBar.PerformStep(); });
-		}
 
 		private void kaydetToolStripMenuItem_Click(object sender, EventArgs e)
 		{
@@ -191,7 +145,7 @@ namespace PCEnvanter
 
         private void lv_pcl_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
         {
-
+			
             ListViewItem lvi = lvil.ElementAt(e.ItemIndex);
             e.Item = lvi;
 

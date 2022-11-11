@@ -32,6 +32,8 @@
             this.dosyaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.kaydetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.excelDosyasınaÇevirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.progressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.lv_pcl = new System.Windows.Forms.ListView();
             this.No = new System.Windows.Forms.ColumnHeader();
             this.PcName = new System.Windows.Forms.ColumnHeader();
@@ -47,8 +49,6 @@
             this.Disk = new System.Windows.Forms.ColumnHeader();
             this.Monitor = new System.Windows.Forms.ColumnHeader();
             this.Graphics = new System.Windows.Forms.ColumnHeader();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.progressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -87,6 +87,22 @@
             this.excelDosyasınaÇevirToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.excelDosyasınaÇevirToolStripMenuItem.Text = "Excel Dosyasına Çevir";
             // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.progressBar});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 408);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(1064, 22);
+            this.statusStrip1.TabIndex = 2;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // progressBar
+            // 
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(100, 16);
+            this.progressBar.Step = 1;
+            // 
             // lv_pcl
             // 
             this.lv_pcl.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -104,16 +120,16 @@
             this.Disk,
             this.Monitor,
             this.Graphics});
+            this.lv_pcl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lv_pcl.FullRowSelect = true;
-            this.lv_pcl.Location = new System.Drawing.Point(0, 223);
+            this.lv_pcl.Location = new System.Drawing.Point(0, 0);
             this.lv_pcl.MultiSelect = false;
             this.lv_pcl.Name = "lv_pcl";
-            this.lv_pcl.Size = new System.Drawing.Size(1064, 218);
-            this.lv_pcl.TabIndex = 1;
+            this.lv_pcl.Size = new System.Drawing.Size(1064, 408);
+            this.lv_pcl.TabIndex = 3;
             this.lv_pcl.UseCompatibleStateImageBehavior = false;
             this.lv_pcl.View = System.Windows.Forms.View.Details;
             this.lv_pcl.VirtualMode = true;
-            this.lv_pcl.RetrieveVirtualItem += new System.Windows.Forms.RetrieveVirtualItemEventHandler(this.lv_pcl_RetrieveVirtualItem);
             // 
             // No
             // 
@@ -184,29 +200,13 @@
             this.Graphics.Text = "Ekran Kartı";
             this.Graphics.Width = 140;
             // 
-            // statusStrip1
-            // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.progressBar});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 408);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1064, 22);
-            this.statusStrip1.TabIndex = 2;
-            this.statusStrip1.Text = "statusStrip1";
-            // 
-            // progressBar
-            // 
-            this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(100, 16);
-            this.progressBar.Step = 1;
-            // 
             // PcListBuilder
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1064, 430);
-            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.lv_pcl);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "PcListBuilder";
@@ -228,22 +228,22 @@
 		private ToolStripMenuItem dosyaToolStripMenuItem;
 		private ToolStripMenuItem kaydetToolStripMenuItem;
 		private ToolStripMenuItem excelDosyasınaÇevirToolStripMenuItem;
-		private ListView lv_pcl;
-		private ColumnHeader No;
-		private ColumnHeader PcName;
-		private ColumnHeader IP;
-		private ColumnHeader User;
-		private ColumnHeader Title;
-		private ColumnHeader PP;
-		private ColumnHeader FE;
-		private ColumnHeader Brand;
-		private ColumnHeader CPU;
-		private ColumnHeader Memory;
-		private ColumnHeader Disk;
-		private ColumnHeader Graphics;
-		private ColumnHeader Enclosure;
-		private ColumnHeader Monitor;
         private StatusStrip statusStrip1;
         private ToolStripProgressBar progressBar;
+        private ListView lv_pcl;
+        private ColumnHeader No;
+        private ColumnHeader PcName;
+        private ColumnHeader IP;
+        private ColumnHeader User;
+        private ColumnHeader Title;
+        private ColumnHeader PP;
+        private ColumnHeader FE;
+        private ColumnHeader Brand;
+        private ColumnHeader Enclosure;
+        private ColumnHeader CPU;
+        private ColumnHeader Memory;
+        private ColumnHeader Disk;
+        private ColumnHeader Monitor;
+        private ColumnHeader Graphics;
     }
 }
