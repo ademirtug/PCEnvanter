@@ -72,6 +72,9 @@ namespace PCEnvanter
 					return 0;
 
 				double cpuRating = Cpu?.Score.Map(3000, 12000, 0, 3) ?? 1.0;
+				double mmin = (ulong)Math.Pow(2, 30) * 5;
+				double mmax = (ulong)Math.Pow(2, 30) * 10;
+
 				double memoryRating = Memory?.Capacity.Map((ulong)Math.Pow(2, 30) * 5, (ulong)Math.Pow(2, 30) * 10, 0, 2) ?? 1;
 				double diskRating = Wei?.Disk / 2 ?? 0;
 
@@ -81,6 +84,9 @@ namespace PCEnvanter
 
 		public bool RetrieveInfo()
 		{
+			Stopwatch sw = new Stopwatch();
+			sw.Start();
+
 			IP = getPCIP();
 			if (IP == "0.0.0.0")
 				return false;
@@ -91,12 +97,13 @@ namespace PCEnvanter
 			VideoCard = getVideoCard();
 			User = getPCUser();
 			Enclosure = getPCEnclosure();
-			Cpu = getCPU();
+			retrieveCPUInfo();
 			Disk = getDisk();
 			Memory = getMemory();
 			Wei = getWei();
 			Monitor = getMonitor();
-			Debug.WriteLine(Name + " Completed.");
+			sw.Stop();
+			Debug.WriteLine(Name + " Completed. in:" + sw.Elapsed);
 			return true;
 		}
 
@@ -229,26 +236,21 @@ namespace PCEnvanter
 
 		}
 
-		private CPU getCPU()
+		private void retrieveCPUInfo()
 		{
-			CPU c = new CPU();
 			try
 			{
+				Cpu = new CPU();
 				foreach (ManagementObject m in Query(Name, "SELECT Name FROM Win32_Processor"))
 				{
-					//List<string> lst = new List<string>();
-					//foreach (var item in m.Properties)
-					//{
-					//    lst.Add(item.Name + ": " + item.Value?.ToString());
-					//}
-					c.Name = m["Name"]?.ToString() ?? "";
+
+					Cpu.Name = m["Name"]?.ToString() ?? "";
 				}
 			}
 			catch (Exception ex)
 			{
+				Cpu = null;
 			}
-			return c;
-
 		}
 
 		private Monitor getMonitor()
@@ -326,7 +328,7 @@ namespace PCEnvanter
 			{
 				foreach (ManagementObject m in Query(Name, "SELECT * FROM Win32_PhysicalMemory"))
 				{
-					mm.Capacity += Convert.ToUInt64(m["Capacity"]?.ToString() ?? "0");
+					mm.Capacity += Convert.ToInt64 (m["Capacity"]?.ToString() ?? "0");
 					mm.Frequency = Convert.ToInt32(m["Speed"]?.ToString() ?? "0");
 					mm.MemoryTypeData = m["MemoryType"]?.ToString() ?? "";
 				}
@@ -416,7 +418,7 @@ namespace PCEnvanter
 
 				foreach (var cpu in Main.cpuList)
 				{
-					if (cpu.Model == Model)
+					if (cpu.Model.Contains(Model))
 					{
 						_score = cpu.Score;
 						return cpu.Score;
@@ -454,24 +456,22 @@ namespace PCEnvanter
 			{
 				if (Name == "")
 					return "";
+
 				try
 				{
 					string[] sp = Name.Split(" ");
-
 					string[] intel = { "i3", "i5", "i7", "i9" };
 					foreach (string processor in intel)
 					{
 						int index = Name.IndexOf(processor);
 						if (index > -1)
-							return Name.Substring(index, Name.IndexOf(" ", index) - index).Trim();
+							return clearName(Name.Substring(index, Name.IndexOf(" ", index) - index));
 					}
-
+						
 					for (int i = 0; i < sp.Length; i++)
 					{
 						if (sp[i].ToUpper().Contains("AMD"))
-						{
-							return $"{sp[i + 1]} {sp[i + 2]} {sp[i + 3]}";
-						}
+							return clearName($"{sp[i + 1]} {sp[i + 2]} {sp[i + 3]}");
 					}
 				}
 				catch (Exception)
@@ -484,11 +484,17 @@ namespace PCEnvanter
 		}
 
 		public string Name { get; set; } = "";
+
+		string clearName(string n)
+        {
+			return n.Replace("(tm)", "").Replace("Processor", "").Replace("  ", " ").Trim();
+
+		}
 	}
 
 	public class Memory
 	{
-		public ulong Capacity { get; set; } = 0;
+		public double Capacity { get; set; } = 0;
 
 		public int Frequency { get; set; } = 0;
 
@@ -504,11 +510,7 @@ namespace PCEnvanter
 					return "SDRAM";
 				else if (MemoryTypeData == "20")
 					return "DDR";
-				else if (MemoryTypeData == "21")
-					return "DDR2";
-				else if (MemoryTypeData == "22")
-					return "DDR2";
-				else if (MemoryTypeData == "23")
+				else if (MemoryTypeData == "21" || MemoryTypeData == "22" || MemoryTypeData == "23")
 					return "DDR2";
 				else if (MemoryTypeData == "24")
 					return "DDR3";
@@ -516,7 +518,6 @@ namespace PCEnvanter
 					return "DDR4";
 				else if (MemoryTypeData == "0")
 					return Convert.ToInt32(Frequency) < 2133 || Convert.ToInt32(Frequency) > 5000 ? (Convert.ToInt32(Frequency) < 1066 || Convert.ToInt32(Frequency) >= 2133 ? (Convert.ToInt32(Frequency) >= 1066 ? "???" : "DDR2") : "DDR3") : "DDR4";
-
 				return "";
 			}
 		}
@@ -524,7 +525,7 @@ namespace PCEnvanter
 
 		public override string ToString()
 		{
-			return (Capacity / (1024 * 1024 * 1024)) + " GB "+ MemoryType;
+			return ((Capacity / (1024 * 1024 * 1024))).ToString("F1") + " GB "+ MemoryType;
 		}
 	}
 
@@ -577,6 +578,7 @@ namespace PCEnvanter
 		public string Title { get; set; } = "";
 
 	}
+
 	public class Monitor
 	{
 		public string ID { get; set; } = "";
@@ -608,13 +610,6 @@ namespace PCEnvanter
 			return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
 		}
 
-		//MAP
-		public static double Map(this int value, int fromSource, int toSource, int fromTarget, int toTarget)
-		{
-			//value = Clamp(value, fromSource, toSource);
-			value = Math.Min(value, toSource);
-			return (value - fromSource) / (toSource - fromSource) * (toTarget - fromTarget) + fromTarget;
-		}
 		public static double Map(this double value, double fromSource, double toSource, double fromTarget, double toTarget)
 		{
 			//value = Clamp(value, fromSource, toSource);
@@ -622,16 +617,16 @@ namespace PCEnvanter
 			return (value - fromSource) / (toSource - fromSource) * (toTarget - fromTarget) + fromTarget;
 		}
 
-		public static double Map(this ulong value, ulong fromSource, ulong toSource, ulong fromTarget, ulong toTarget)
-		{
-			//value = Clamp(value, fromSource, toSource);
-			value = Math.Min(value, toSource);
-			return (value - fromSource) / (toSource - fromSource) * (toTarget - fromTarget) + fromTarget;
-		}
+        //public static double Map(this long value, long fromSource, long toSource, long fromTarget, long toTarget)
+        //{
+        //    //value = Clamp(value, fromSource, toSource);
+        //    value = Math.Min(value, toSource);
+        //    return (value - fromSource) / (toSource - fromSource) * (toTarget - fromTarget) + fromTarget;
+        //}
 
 
-		//CLAMP
-		public static int Clamp(int value, int min, int max)
+        //CLAMP
+        public static int Clamp(int value, int min, int max)
 		{
 			return (value < min) ? min : (value > max) ? max : value;
 		}
@@ -640,6 +635,10 @@ namespace PCEnvanter
 			return (value < min) ? min : (value > max) ? max : value;
 		}
 		public static ulong Clamp(ulong value, ulong min, ulong max)
+		{
+			return (value < min) ? min : (value > max) ? max : value;
+		}
+		public static long Clamp(long value, long min, long max)
 		{
 			return (value < min) ? min : (value > max) ? max : value;
 		}

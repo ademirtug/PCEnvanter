@@ -18,7 +18,7 @@ namespace PCEnvanter
 		string datafile = "../../../data/data.txt";
 #else
 		public static string dpath = "./data/";
-		string datafile = "./data/data.txt"
+		string datafile = "./data/data.txt";
 #endif
 
 		public Main()
