@@ -313,7 +313,7 @@ namespace PCEnvanter
 				{
 
                     d.MediaType = m["MediaType"]?.ToString() ?? "0";
-
+					d.BusType = m["MediaType"]?.ToString() ?? "0";
                     //usb türlerini geç
                     if (d.MediaType == "7" || d.MediaType == "12" || d.MediaType == "13")
 						continue;
@@ -325,8 +325,8 @@ namespace PCEnvanter
 					}
                     d.Model = m["Model"]?.ToString() ?? "";
 					d.FriendlyName = m["FriendlyName"]?.ToString() ?? "";
-                    
 					d.Capacity += Convert.ToUInt64(m["Size"]?.ToString() ?? "0");
+					break;
 
 
 				}

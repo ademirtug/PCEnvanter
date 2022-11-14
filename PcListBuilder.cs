@@ -18,9 +18,9 @@ namespace PCEnvanter
 		{
 			InitializeComponent();
 
-			//PC pc = new PC() { Name = "P71UNSALARS" };
-			//pc.RetrieveInfo();
-			//Debug.WriteLine(pc.Disk.Model);
+			PC pc = new PC() { Name = "A71GOKCENDURU" };
+			pc.RetrieveInfo();
+			Debug.WriteLine(pc.Disk.Model);
 		}
 
         //WDC WD5000AAKX-22ERMA0
