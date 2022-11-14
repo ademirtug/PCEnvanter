@@ -311,14 +311,22 @@ namespace PCEnvanter
                 List<string> list = new List<string>();
                 foreach (ManagementObject m in Query(Name, "SELECT * FROM MSFT_PhysicalDisk", true))
 				{
-					foreach(var y in m.Properties)
+
+                    d.MediaType = m["MediaType"]?.ToString() ?? "0";
+
+                    //usb türlerini geç
+                    if (d.MediaType == "7" || d.MediaType == "12" || d.MediaType == "13")
+						continue;
+
+
+                    foreach (var y in m.Properties)
 					{
 						list.Add(y.Name + "=" + y.Value);
 					}
                     d.Model = m["Model"]?.ToString() ?? "";
 					d.FriendlyName = m["FriendlyName"]?.ToString() ?? "";
-                    d.MediaType = m["MediaType"] != null ? m["MediaType"].ToString() : "0";
-					d.Capacity += m["Size"] != null ? Convert.ToUInt64(m["Size"].ToString()) : 1UL;
+                    
+					d.Capacity += Convert.ToUInt64(m["Size"]?.ToString() ?? "0");
 
 
 				}
@@ -557,8 +565,13 @@ namespace PCEnvanter
 
 	public class Disk
 	{
-		double _score = 0; 
-        public string Model { get; set; } = "";
+		double _score = 0;
+		string _model = "";
+        public string Model 
+		{
+			get { return _model;  }
+			set { _model = value.Replace("-", " ").Trim(); }
+		}
         public string FriendlyName { get; set; } = "";
         public ulong Capacity { get; set; } = 0;
 
@@ -576,10 +589,25 @@ namespace PCEnvanter
                     if (disk.Model.Contains(Model))
 					{
                         _score = disk.Score;
-                        return disk.Score;
+						break;
                     }
                 }
-                return 0;
+				if(_score == 0)
+				{
+                    foreach (var disk in Main.diskList)
+                    {
+						string mm = Model;
+						mm = mm.Remove(mm.LastIndexOf(" "), mm.Length - mm.LastIndexOf(" "));
+
+                        if (disk.Model.Contains(mm))
+                        {
+                            _score = disk.Score;
+                            break;
+                        }
+                    }
+                }
+
+                return _score;
 
             }
             set

@@ -144,7 +144,7 @@ namespace PCEnvanter
 			lvi.SubItems.Add(pc.Enclosure);
 			lvi.SubItems.Add(pc.Cpu?.Model);
 			lvi.SubItems.Add(pc.Memory?.ToString());
-			lvi.SubItems.Add(pc.Disk?.ToString()+"("+ pc.Disk?.Score +")");
+			lvi.SubItems.Add(pc.Disk?.Model + " - "+ pc.Disk?.ToString()+"("+ pc.Disk?.Score +")");
 			lvi.SubItems.Add(pc.Monitor?.Size.ToString("F1").Length > 0 ? pc.Monitor?.Size.ToString("F1") + " inç" : "");
 			lvi.SubItems.Add(pc.VideoCard?.Name);
 
