@@ -5,8 +5,6 @@ using System.Management;
 using System.Text;
 using System.DirectoryServices;
 using System.Text.Json;
-using System.Collections.Concurrent;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace PCEnvanter
 {
@@ -37,8 +35,6 @@ namespace PCEnvanter
 				return JsonSerializer.Deserialize<PcList>(File.ReadAllText(path)) ?? new PcList();
 			return new PcList();
 		}
-
-
 	}
 	public class PC
 	{
@@ -265,8 +261,8 @@ namespace PCEnvanter
 					if (m["PNPDeviceID"] == null)
 						continue;
 
-					var parts = m["PNPDeviceID"].ToString().Split("\\");
-					if (parts.Length > 2)
+					var parts = m["PNPDeviceID"]?.ToString()?.Split("\\");
+					if (parts?.Length > 2)
 					{
 						mo.ID = parts[1];
 						break;
@@ -313,9 +309,10 @@ namespace PCEnvanter
 				{
 
                     d.MediaType = m["MediaType"]?.ToString() ?? "0";
-					d.BusType = m["MediaType"]?.ToString() ?? "0";
-                    //usb türlerini geç
-                    if (d.MediaType == "7" || d.MediaType == "12" || d.MediaType == "13")
+					d.BusType = m["BusType"]?.ToString() ?? "0";
+                    
+					//usb türlerini geç
+                    if (d.BusType == "7" || d.BusType == "12" || d.BusType == "13")
 						continue;
 
 
@@ -567,6 +564,7 @@ namespace PCEnvanter
 	{
 		double _score = 0;
 		string _model = "";
+
         public string Model 
 		{
 			get { return _model;  }
@@ -577,7 +575,8 @@ namespace PCEnvanter
 
 		public string scap { get; set; } = "";
 		public string MediaType { get; set; } = "";
-        public double Score
+		public string BusType { get; set; } = "";
+		public double Score
 		{
 			get
             {

@@ -75,9 +75,9 @@ namespace PCEnvanter
                             while (cpc.TryDequeue(out pcx))
 								addToListViewCache(pcx);
 						}
-					}catch(Exception ex)
+					}catch(Exception)
                     {
-						int stop = 1;
+						
                     }
 				}).Start();
 			}
