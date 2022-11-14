@@ -6,6 +6,7 @@ using System.Text;
 using System.DirectoryServices;
 using System.Text.Json;
 using System.Collections.Concurrent;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace PCEnvanter
 {
@@ -307,10 +308,19 @@ namespace PCEnvanter
 			Disk d = new Disk();
 			try
 			{
-				foreach (ManagementObject m in Query(Name, "SELECT * FROM MSFT_PhysicalDisk", true))
+                List<string> list = new List<string>();
+                foreach (ManagementObject m in Query(Name, "SELECT * FROM MSFT_PhysicalDisk", true))
 				{
-					d.MediaType = m["MediaType"] != null ? m["MediaType"].ToString() : "0";
+					foreach(var y in m.Properties)
+					{
+						list.Add(y.Name + "=" + y.Value);
+					}
+                    d.Model = m["Model"]?.ToString() ?? "";
+					d.FriendlyName = m["FriendlyName"]?.ToString() ?? "";
+                    d.MediaType = m["MediaType"] != null ? m["MediaType"].ToString() : "0";
 					d.Capacity += m["Size"] != null ? Convert.ToUInt64(m["Size"].ToString()) : 1UL;
+
+
 				}
 			}
 			catch (Exception)
@@ -546,10 +556,39 @@ namespace PCEnvanter
 	}
 
 	public class Disk
-	{ 
-		public ulong Capacity { get; set; } = 0;
+	{
+		double _score = 0; 
+        public string Model { get; set; } = "";
+        public string FriendlyName { get; set; } = "";
+        public ulong Capacity { get; set; } = 0;
+
+		public string scap { get; set; } = "";
 		public string MediaType { get; set; } = "";
-		public override string ToString()
+        public double Score
+		{
+			get
+            {
+				if (_score > 0)
+                    return _score;
+
+                foreach (var disk in Main.diskList)
+                {
+                    if (disk.Model.Contains(Model))
+					{
+                        _score = disk.Score;
+                        return disk.Score;
+                    }
+                }
+                return 0;
+
+            }
+            set
+            {
+                _score = value;
+            }
+        }
+
+        public override string ToString()
 		{
 			string t = "";
 			if (MediaType == "3" || MediaType == "0")
@@ -559,6 +598,7 @@ namespace PCEnvanter
 
 			return Capacity > 0 ? Capacity / 1000000000 + " GB " + t : t;
 		}
+
 	}
 
 	public class Personnel

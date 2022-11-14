@@ -17,8 +17,14 @@ namespace PCEnvanter
 		public PcListBuilder()
 		{
 			InitializeComponent();
+
+			//PC pc = new PC() { Name = "P71UNSALARS" };
+			//pc.RetrieveInfo();
+			//Debug.WriteLine(pc.Disk.Model);
 		}
-		public PcListBuilder(string fileName) : this()
+
+        //WDC WD5000AAKX-22ERMA0
+        public PcListBuilder(string fileName) : this()
 		{
 			//pcl = PcList.LoadFromFile(fileName);
 
@@ -44,9 +50,14 @@ namespace PCEnvanter
 			if (e.Result == null)
 				return;
 			List<string> pcNamesList = (List<string>)e.Result;
-			progressBar.Step = 100 / pcNamesList.Count;
+			if (pcNamesList.Count == 0)
+				return;
 
-			foreach (string pcname in pcNamesList)
+			progressBar.Step = 100 / Math.Max(1, pcNamesList.Count);
+            Debug.WriteLine("lv_pcl_RetrieveVirtualItem");
+
+
+            foreach (string pcname in pcNamesList)
 			{
 				new Thread(() =>
 				{
@@ -61,7 +72,7 @@ namespace PCEnvanter
 							cpc.Enqueue(pc);
 
 							PC? pcx;
-							while (cpc.TryDequeue(out pcx))
+                            while (cpc.TryDequeue(out pcx))
 								addToListViewCache(pcx);
 						}
 					}catch(Exception ex)
@@ -77,11 +88,16 @@ namespace PCEnvanter
 			List<string> prefixList = (List<string>)e.Argument!;
 			List<string> pcnameslist = GetPCList(prefixList!);
 			e.Result = pcnameslist;
+		
         }
 
         private List<string> GetPCList(List<string> prefixes)
 		{
-			PrincipalContext context = getPrincipalContext();
+			PrincipalContext? context = getPrincipalContext();
+			if(context == null)
+				return new List<string>();
+
+
 			ConcurrentBag<string> pcnamelist = new ConcurrentBag<string>();
 
 			foreach (string prefix in prefixes)
@@ -97,19 +113,27 @@ namespace PCEnvanter
 			return pcnamelist.ToList();
 		}
 
-		private PrincipalContext getPrincipalContext()
+		private PrincipalContext? getPrincipalContext()
 		{
+			try
+			{
 #if DEBUG
-			return new PrincipalContext(ContextType.Domain, "csb.local", "akin.demirtug", "Sandalye22");
+				return new PrincipalContext(ContextType.Domain, "csb.local", "akin.demirtug", "Sandalye22");
 #else
-			return new PrincipalContext(ContextType.Domain, "csb.local");
+				return new PrincipalContext(ContextType.Domain, "csb.local");
 #endif
+			}catch(Exception)
+			{
+
+			}
+			return null;
 		}
 
 
 		void addToListViewCache(PC pc)
         {
-			ListViewItem lvi = new ListViewItem(Interlocked.Increment(ref pclc).ToString());
+            Debug.WriteLine("lv_pcl_RetrieveVirtualItem");
+            ListViewItem lvi = new ListViewItem(Interlocked.Increment(ref pclc).ToString());
 			lvi.SubItems.Add(pc.Name);
 			lvi.SubItems.Add(pc.IP == "0.0.0.0" ? "": pc.IP);
 			lvi.SubItems.Add(pc.User?.Name);
@@ -120,7 +144,7 @@ namespace PCEnvanter
 			lvi.SubItems.Add(pc.Enclosure);
 			lvi.SubItems.Add(pc.Cpu?.Model);
 			lvi.SubItems.Add(pc.Memory?.ToString());
-			lvi.SubItems.Add(pc.Disk?.ToString());
+			lvi.SubItems.Add(pc.Disk?.ToString()+"("+ pc.Disk?.Score +")");
 			lvi.SubItems.Add(pc.Monitor?.Size.ToString("F1").Length > 0 ? pc.Monitor?.Size.ToString("F1") + " inç" : "");
 			lvi.SubItems.Add(pc.VideoCard?.Name);
 
@@ -145,11 +169,10 @@ namespace PCEnvanter
 
         private void lv_pcl_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
         {
-			
-            ListViewItem lvi = lvil.ElementAt(e.ItemIndex);
-            e.Item = lvi;
-
-
+			//Debug.WriteLine("lv_pcl_RetrieveVirtualItem");
+			ListViewItem? lvi = new ListViewItem("NA");
+			lvi = lvil.ElementAt(e.ItemIndex);
+			e.Item = lvi;
         }
     }
 }

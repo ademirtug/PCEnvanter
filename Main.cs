@@ -10,28 +10,40 @@ namespace PCEnvanter
 	public partial class Main : Form
 	{
 		public static List<CPU> cpuList = new List<CPU>();
+        public static List<Disk> diskList = new List<Disk>();
 
 #if DEBUG
-		public static string dpath = "../../../data/";
-		string datafile = "../../../data/data.txt";
+        public static string dpath = "../../../data/";
+		string cpuDataFile = "../../../data/data.txt";
+        string diskDataFile = "../../../data/hdd_data.txt";
 #else
 		public static string dpath = "./data/";
-		string datafile = "./data/data.txt";
+		string cpuDataFile = "./data/data.txt";
+		string diskDataFile = "./data/hdd_data.txt";
+
 #endif
 
-		public Main()
+        public Main()
 		{
 			InitializeComponent();
-			Main.cpuList = new List<CPU>();
 
-			string[] lines = File.ReadAllLines(datafile);
-			foreach (string line in lines)
+            foreach (string line in File.ReadAllLines(cpuDataFile))
 			{
 				string[] sp = line.Split("\t");
 				Main.cpuList.Add(new CPU() { Name = sp[0], Score = Convert.ToDouble(sp[1]) });
 			}
 
-		}
+			string[] dlines = File.ReadAllLines(diskDataFile);
+            foreach (string lx in File.ReadAllLines(diskDataFile))
+            {
+                string[] sp = lx.Split("\t");
+                string scap = sp[1].Split(" ")[0];
+
+                double sib = Convert.ToDouble(scap) * (sp[1].Split(" ")[1] == "GB" ? 1024*1024*1024 : (double)1024*1024*1024*1024);
+
+                Main.diskList.Add(new Disk() { Model = sp[0], scap=sp[1], Capacity=Convert.ToUInt64(sib), Score = Convert.ToDouble(sp[2]) });
+            }
+        }
 
 		private void destekAlToolStripMenuItem_Click(object sender, EventArgs e)
         {
