@@ -169,7 +169,7 @@
             // 
             // PP
             // 
-            this.PP.Text = "İşlem Gücü";
+            this.PP.Text = "İşlemci Hızı";
             this.PP.Width = 80;
             // 
             // DiskSpeed
