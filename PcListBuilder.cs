@@ -23,12 +23,12 @@ namespace PCEnvanter
         //WDC WD5000AAKX-22ERMA0
         public PcListBuilder(string fileName) : this()
 		{
-			//pcl = PcList.LoadFromFile(fileName);
+			pcl = PcList.LoadFromFile(fileName);
 
-			//foreach(PC pc in pcl.pcl)
-			//{
-			//	addToListView(pc);
-			//}
+			foreach (PC pc in pcl.pcl)
+			{
+				addToListView(pc);
+			}
 		}
 
 		public PcListBuilder(List<string> prefixList) : this()
@@ -128,8 +128,29 @@ namespace PCEnvanter
 			return null;
 		}
 
+        void addToListView(PC pc)
+        {
+            ListViewItem lvi = new ListViewItem(Interlocked.Increment(ref pclc).ToString());
+            lvi.SubItems.Add(pc.Name);
+            lvi.SubItems.Add(pc.IP == "0.0.0.0" ? "" : pc.IP);
+            lvi.SubItems.Add(pc.User?.Name);
+            lvi.SubItems.Add(pc.User?.Title);
+            lvi.SubItems.Add(pc.Cpu?.Score.ToString());
+            lvi.SubItems.Add(pc.Disk?.Score.ToString());
+            lvi.SubItems.Add(pc.IP == "0.0.0.0" ? "" : pc.Fluency.ToString("F1"));
+            lvi.SubItems.Add(pc.Model);
+            lvi.SubItems.Add(pc.Enclosure);
+            lvi.SubItems.Add(pc.Cpu?.Model);
+            lvi.SubItems.Add(pc.Memory?.ToString());
+            lvi.SubItems.Add(pc.Disk?.ToString());
+            lvi.SubItems.Add(pc.Monitor?.Size.ToString("F1").Length > 0 ? pc.Monitor?.Size.ToString("F1") + " inç" : "");
+            lvi.SubItems.Add(pc.VideoCard?.Name);
 
-		void addToListViewCache(PC pc)
+            Cache.Add(lvi);
+            lv_pcl.VirtualListSize = Cache.Count;
+        }
+
+        void addToListViewCache(PC pc)
         {
             ListViewItem lvi = new ListViewItem(Interlocked.Increment(ref pclc).ToString());
 			lvi.SubItems.Add(pc.Name);
@@ -137,12 +158,13 @@ namespace PCEnvanter
 			lvi.SubItems.Add(pc.User?.Name);
 			lvi.SubItems.Add(pc.User?.Title);
 			lvi.SubItems.Add(pc.Cpu?.Score.ToString());
-			lvi.SubItems.Add(pc.IP == "0.0.0.0" ? "" : pc.Fluency.ToString("F1"));
-			lvi.SubItems.Add(pc.Model);
+            lvi.SubItems.Add(pc.Disk?.Score.ToString());
+            lvi.SubItems.Add(pc.IP == "0.0.0.0" ? "" : pc.Fluency.ToString("F1"));
+            lvi.SubItems.Add(pc.Model);
 			lvi.SubItems.Add(pc.Enclosure);
 			lvi.SubItems.Add(pc.Cpu?.Model);
 			lvi.SubItems.Add(pc.Memory?.ToString());
-			lvi.SubItems.Add(pc.Disk?.ToString() + (pc.Disk?.Capacity > 0 ? "(" + pc.Disk?.Score +")" : ""));
+			lvi.SubItems.Add(pc.Disk?.ToString());
 			lvi.SubItems.Add(pc.Monitor?.Size.ToString("F1").Length > 0 ? pc.Monitor?.Size.ToString("F1") + " inç" : "");
 			lvi.SubItems.Add(pc.VideoCard?.Name);
 

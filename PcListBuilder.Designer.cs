@@ -42,6 +42,7 @@
             this.Title = new System.Windows.Forms.ColumnHeader();
             this.PP = new System.Windows.Forms.ColumnHeader();
             this.FE = new System.Windows.Forms.ColumnHeader();
+            this.DiskSpeed = new System.Windows.Forms.ColumnHeader();
             this.Brand = new System.Windows.Forms.ColumnHeader();
             this.Enclosure = new System.Windows.Forms.ColumnHeader();
             this.CPU = new System.Windows.Forms.ColumnHeader();
@@ -112,6 +113,7 @@
             this.User,
             this.Title,
             this.PP,
+            this.DiskSpeed,
             this.FE,
             this.Brand,
             this.Enclosure,
@@ -167,6 +169,10 @@
             // 
             this.FE.Text = "Ferahlık";
             this.FE.Width = 80;
+            // 
+            // DiskSpeed
+            // 
+            this.DiskSpeed.Text = "Disk Hızı";
             // 
             // Brand
             // 
@@ -247,5 +253,6 @@
         private ColumnHeader Disk;
         private ColumnHeader Monitor;
         private ColumnHeader Graphics;
+        private ColumnHeader DiskSpeed;
     }
 }
