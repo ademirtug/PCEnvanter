@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using NPOI.SS.Formula.Functions;
+using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.DirectoryServices.AccountManagement;
@@ -10,18 +11,14 @@ namespace PCEnvanter
 	{
 		PcList pcl = new PcList();
 		ConcurrentQueue<PC> cpc = new ConcurrentQueue<PC>();
-		List<ListViewItem> lvil = new List<ListViewItem>();
-
+		List<ListViewItem> Cache = new List<ListViewItem>();
+		int sortColumn = -1;
 		string fileName = "";
 		int pclc = 0;
 		public PcListBuilder()
 		{
 			InitializeComponent();
-
-			PC pc = new PC() { Name = "A71GOKCENDURU" };
-			pc.RetrieveInfo();
-			Debug.WriteLine(pc.Disk.Model);
-		}
+        }
 
         //WDC WD5000AAKX-22ERMA0
         public PcListBuilder(string fileName) : this()
@@ -39,11 +36,16 @@ namespace PCEnvanter
 			pcl.PrefixList = prefixList;
 			progressBar.Value = 0;
 
+			//PC pc = new PC() { Name = "P71DURSUNTEKBAL" };
+			//pc.RetrieveInfo();
+
+			//var score = pc.Fluency;
+
             BackgroundWorker bw = new BackgroundWorker();
-            bw.DoWork += Bw_DoWork;
-            bw.RunWorkerCompleted += Bw_RunWorkerCompleted;
-            bw.RunWorkerAsync(prefixList);
-        }
+			bw.DoWork += Bw_DoWork;
+			bw.RunWorkerCompleted += Bw_RunWorkerCompleted;
+			bw.RunWorkerAsync(prefixList);
+		}
 
         private void Bw_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
         {
@@ -54,9 +56,6 @@ namespace PCEnvanter
 				return;
 
 			progressBar.Step = 100 / Math.Max(1, pcNamesList.Count);
-            Debug.WriteLine("lv_pcl_RetrieveVirtualItem");
-
-
             foreach (string pcname in pcNamesList)
 			{
 				new Thread(() =>
@@ -132,7 +131,6 @@ namespace PCEnvanter
 
 		void addToListViewCache(PC pc)
         {
-            Debug.WriteLine("lv_pcl_RetrieveVirtualItem");
             ListViewItem lvi = new ListViewItem(Interlocked.Increment(ref pclc).ToString());
 			lvi.SubItems.Add(pc.Name);
 			lvi.SubItems.Add(pc.IP == "0.0.0.0" ? "": pc.IP);
@@ -144,14 +142,14 @@ namespace PCEnvanter
 			lvi.SubItems.Add(pc.Enclosure);
 			lvi.SubItems.Add(pc.Cpu?.Model);
 			lvi.SubItems.Add(pc.Memory?.ToString());
-			lvi.SubItems.Add(pc.Disk?.Model + " - "+ pc.Disk?.ToString()+"("+ pc.Disk?.Score +")");
+			lvi.SubItems.Add(pc.Disk?.ToString() + (pc.Disk?.Capacity > 0 ? "(" + pc.Disk?.Score +")" : ""));
 			lvi.SubItems.Add(pc.Monitor?.Size.ToString("F1").Length > 0 ? pc.Monitor?.Size.ToString("F1") + " inç" : "");
 			lvi.SubItems.Add(pc.VideoCard?.Name);
 
-			lvil.Add(lvi);
+			Cache.Add(lvi);
 			
 			//lvil = lvil.OrderBy(x => Convert.ToInt32(x.SubItems[0].Text)).ToList();
-			lv_pcl.Invoke(() => { lv_pcl.VirtualListSize = lvil.Count;});
+			lv_pcl.Invoke(() => { lv_pcl.VirtualListSize = Cache.Count;});
         }
 
 
@@ -171,8 +169,49 @@ namespace PCEnvanter
         {
 			//Debug.WriteLine("lv_pcl_RetrieveVirtualItem");
 			ListViewItem? lvi = new ListViewItem("NA");
-			lvi = lvil.ElementAt(e.ItemIndex);
+			lvi = Cache.ElementAt(e.ItemIndex);
 			e.Item = lvi;
+        }
+
+        private void lv_pcl_ColumnClick(object sender, ColumnClickEventArgs e)
+       {
+            bool isnum = false;
+            foreach (ListViewItem lvi in Cache)
+            {
+                if (lvi.SubItems[e.Column].Text.Length > 0)
+                {
+                    isnum = Double.TryParse(lvi.SubItems[e.Column].Text, out _);
+                    break;
+                }
+            }
+
+
+            if (isnum)
+            {
+                Cache = Cache.OrderBy(x => {
+                    string sortVal = x.SubItems[e.Column].Text;
+                    if (sortVal == "")
+                        sortVal = "0";
+
+                    return Convert.ToDouble(sortVal);
+                }).ToList();
+            }
+            else
+                Cache = Cache?.OrderBy(x => x.SubItems[e.Column].Text).ToList();
+
+
+			if (sortColumn == e.Column)
+			{
+				Cache?.Reverse();
+				sortColumn = -1;
+			}
+			else
+			{
+                sortColumn = e.Column;
+            }
+
+
+            lv_pcl.Refresh();
         }
     }
 }

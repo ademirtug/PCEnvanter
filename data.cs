@@ -56,8 +56,6 @@ namespace PCEnvanter
 
 		public Monitor? Monitor { get; set; }
 
-		public Wei? Wei { get; set; }
-
 		public VideoCard? VideoCard { get; set; } 
 
 		public string Enclosure { get; set; } = "";
@@ -65,17 +63,11 @@ namespace PCEnvanter
 		{
 			get
 			{
-				if (Wei?.Disk == 0)
-					return 0;
-
 				double cpuRating = Cpu?.Score.Map(3000, 12000, 0, 3) ?? 1.0;
-				double mmin = (ulong)Math.Pow(2, 30) * 5;
-				double mmax = (ulong)Math.Pow(2, 30) * 10;
-
 				double memoryRating = Memory?.Capacity.Map((ulong)Math.Pow(2, 30) * 5, (ulong)Math.Pow(2, 30) * 10, 0, 2) ?? 1;
-				double diskRating = Wei?.Disk / 2 ?? 0;
+				double diskRating = Disk?.Score.Map(1000, 16000, 0, 5) ?? 0;
 
-				return Math.Max(cpuRating+memoryRating+diskRating, 2.0);
+				return Math.Max(cpuRating+memoryRating+diskRating, 1.0);
 			}
 		}
 
@@ -97,7 +89,6 @@ namespace PCEnvanter
 			retrieveCPUInfo();
 			Disk = getDisk();
 			Memory = getMemory();
-			Wei = getWei();
 			Monitor = getMonitor();
 			sw.Stop();
 			Debug.WriteLine(Name + " Completed. in:" + sw.Elapsed);
@@ -116,7 +107,7 @@ namespace PCEnvanter
 					r[1] = m["Manufacturer"]?.ToString() ?? "";
 				}
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
 			}
 			return r;
@@ -132,7 +123,7 @@ namespace PCEnvanter
 					vc.Name = m["Name"]?.ToString() ?? "";
 				}
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
 			}
 			return vc;
@@ -169,7 +160,7 @@ namespace PCEnvanter
 					}
 				}
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
 				return null;
 			}
@@ -194,7 +185,7 @@ namespace PCEnvanter
 					return m["IPAddress"] == null ? "0.0.0.0" : ((string[])m["IPAddress"])[0];
 				}
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
 			}
 			return "0.0.0.0";
@@ -226,7 +217,7 @@ namespace PCEnvanter
 					}
 				}
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
 			}
 			return "-";
@@ -244,7 +235,7 @@ namespace PCEnvanter
 					Cpu.Name = m["Name"]?.ToString() ?? "";
 				}
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
 				Cpu = null;
 			}
@@ -270,7 +261,7 @@ namespace PCEnvanter
 
 				}
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
 			}
 			mo.Size = GetMonitorSize();
@@ -293,7 +284,7 @@ namespace PCEnvanter
 				}
 				return Math.Sqrt((w * w) + (h * h)) / 2.54;
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
 
 			}
@@ -328,7 +319,7 @@ namespace PCEnvanter
 
 				}
 			}
-			catch (Exception)
+			catch (Exception ex )
 			{
 			}
 			return d;
@@ -348,7 +339,7 @@ namespace PCEnvanter
 					mm.MemoryTypeData = m["MemoryType"]?.ToString() ?? "";
 				}
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
 
 			}
@@ -368,7 +359,7 @@ namespace PCEnvanter
 					w.Memory = Convert.ToDouble(m["MemoryScore"]?.ToString() ?? "0");
 				}
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
 
 			}
@@ -474,22 +465,27 @@ namespace PCEnvanter
 
 				try
 				{
-					string[] sp = Name.Split(" ");
+					string safeName = Name + " ";
+					string[] sp = safeName.Split(" ");
 					string[] intel = { "i3", "i5", "i7", "i9" };
 					foreach (string processor in intel)
 					{
-						int index = Name.IndexOf(processor);
+						int index = safeName.IndexOf(processor);
 						if (index > -1)
-							return clearName(Name.Substring(index, Name.IndexOf(" ", index) - index));
+							return clearName(safeName.Substring(index, safeName.IndexOf(" ", index) - index));
 					}
 						
 					for (int i = 0; i < sp.Length; i++)
 					{
 						if (sp[i].ToUpper().Contains("AMD"))
-							return clearName($"{sp[i + 1]} {sp[i + 2]} {sp[i + 3]}");
+						{
+							//string n = $"{sp[i + 1]} {sp[i + 2]}  {( i+3 < sp.Length ? sp[i + 3] : "") }";
+
+                            return clearName($"{sp[i + 1]} {sp[i + 2]}  {(i + 3 < sp.Length ? sp[i + 3] : "")}");
+						}
 					}
 				}
-				catch (Exception)
+				catch (Exception ex)
 				{
 
 				}
@@ -502,7 +498,7 @@ namespace PCEnvanter
 
 		string clearName(string n)
         {
-			return n.Replace("(tm)", "").Replace("Processor", "").Replace("  ", " ").Trim();
+			return n.Replace("(tm)", "").Replace("(TM)", "").Replace("Intel(R)", "").Replace("Processor", "").Replace("  ", " ").Trim();
 
 		}
 	}
@@ -565,14 +561,42 @@ namespace PCEnvanter
 		double _score = 0;
 		string _model = "";
 
-        public string Model 
+		public string Model
 		{
-			get { return _model;  }
+			get { return _model; }
 			set { _model = value.Replace("-", " ").Trim(); }
 		}
-        public string FriendlyName { get; set; } = "";
-        public ulong Capacity { get; set; } = 0;
+		public string FriendlyName { get; set; } = "";
+		public ulong Capacity { get; set; } = 0;
 
+		public DiskCapacityTier CapacityTier
+		{
+			get
+			{
+				if(Capacity > 200 * Math.Pow(2, 30) && Capacity < 290 * Math.Pow(2, 30))
+				{
+					return DiskCapacityTier.d256;
+				}
+				else if (Capacity > 290 * Math.Pow(2, 30) && Capacity < 350 * Math.Pow(2, 30))
+                {
+                    return DiskCapacityTier.d320;
+                }
+				else if (Capacity > 450 * Math.Pow(2, 30) && Capacity < 550 * Math.Pow(2, 30))
+                {
+                    return DiskCapacityTier.d500;
+                }
+				else if (Capacity > 800 * Math.Pow(2, 30) && Capacity < 1100 * Math.Pow(2, 30))
+                {
+                    return DiskCapacityTier.d1000;
+                }
+				else if (Capacity > 1100 * Math.Pow(2, 30) && Capacity < 2100 * Math.Pow(2, 30))
+                {
+                    return DiskCapacityTier.d2000;
+                }
+
+                return DiskCapacityTier.d256;
+			}
+		}
 		public string scap { get; set; } = "";
 		public string MediaType { get; set; } = "";
 		public string BusType { get; set; } = "";
@@ -583,31 +607,28 @@ namespace PCEnvanter
 				if (_score > 0)
                     return _score;
 
-                foreach (var disk in Main.diskList)
-                {
-                    if (disk.Model.Contains(Model))
-					{
-                        _score = disk.Score;
-						break;
-                    }
-                }
-				if(_score == 0)
+
+
+				foreach (Disk d in Main.diskList)
 				{
-                    foreach (var disk in Main.diskList)
-                    {
-						string mm = Model;
-						mm = mm.Remove(mm.LastIndexOf(" "), mm.Length - mm.LastIndexOf(" "));
+					if(d.Model.Contains(Model) && d.CapacityTier == CapacityTier)
+					{
+						_score = d.Score;
+						return _score;
+					}
+				}
 
-                        if (disk.Model.Contains(mm))
-                        {
-                            _score = disk.Score;
-                            break;
-                        }
+				string mm = Model.Remove(Model.LastIndexOf(" "), Model.Length - Model.LastIndexOf(" "));
+                foreach (Disk d in Main.diskList)
+                {
+                    if (d.Model.Contains(mm) && d.CapacityTier == CapacityTier)
+                    {
+                        _score = d.Score;
+                        return _score;
                     }
                 }
-
+				_score = MediaType == "3" || MediaType == "0" ? 600 : 11000;
                 return _score;
-
             }
             set
             {
@@ -617,6 +638,9 @@ namespace PCEnvanter
 
         public override string ToString()
 		{
+			if (Capacity == 0)
+				return "";
+
 			string t = "";
 			if (MediaType == "3" || MediaType == "0")
 				t = "HDD";
@@ -625,6 +649,8 @@ namespace PCEnvanter
 
 			return Capacity > 0 ? Capacity / 1000000000 + " GB " + t : t;
 		}
+
+		public enum DiskCapacityTier { d256, d320, d500, d1000, d2000 };
 
 	}
 

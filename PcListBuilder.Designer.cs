@@ -130,6 +130,7 @@
             this.lv_pcl.UseCompatibleStateImageBehavior = false;
             this.lv_pcl.View = System.Windows.Forms.View.Details;
             this.lv_pcl.VirtualMode = true;
+            this.lv_pcl.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lv_pcl_ColumnClick);
             this.lv_pcl.RetrieveVirtualItem += new System.Windows.Forms.RetrieveVirtualItemEventHandler(this.lv_pcl_RetrieveVirtualItem);
             // 
             // No
