@@ -397,6 +397,27 @@ namespace PCEnvanter
 			ManagementObjectCollection queryCollection = searcher.Get();
 			return queryCollection;
 		}
+
+		public ListViewItem GetLVI(string pclc)
+		{
+            ListViewItem lvi = new ListViewItem(pclc);
+            lvi.SubItems.Add(Name);
+            lvi.SubItems.Add(IP == "0.0.0.0" ? "" : IP);
+            lvi.SubItems.Add(User?.Name);
+            lvi.SubItems.Add(User?.Title);
+            lvi.SubItems.Add(Cpu?.Score.ToString());
+            lvi.SubItems.Add(Disk?.Score.ToString());
+            lvi.SubItems.Add(IP == "0.0.0.0" ? "" : Fluency.ToString("F1"));
+            lvi.SubItems.Add(Model);
+            lvi.SubItems.Add(Enclosure);
+            lvi.SubItems.Add(Cpu?.Model);
+            lvi.SubItems.Add(Memory?.ToString());
+            lvi.SubItems.Add(Disk?.ToString());
+            lvi.SubItems.Add(Monitor?.Size.ToString("F1").Length > 0 ? Monitor?.Size.ToString("F1") + " inç" : "");
+            lvi.SubItems.Add(VideoCard?.Name);
+
+			return lvi;
+        }
 	}
 
 	public class Brand

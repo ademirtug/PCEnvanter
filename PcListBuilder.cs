@@ -12,7 +12,9 @@ namespace PCEnvanter
 		PcList pcl = new PcList();
 		ConcurrentQueue<PC> cpc = new ConcurrentQueue<PC>();
 		List<ListViewItem> Cache = new List<ListViewItem>();
-		int sortColumn = -1;
+		ListViewItem? selectedLvi;
+
+        int sortColumn = -1;
 		string fileName = "";
 		int pclc = 0;
 		public PcListBuilder()
@@ -130,48 +132,14 @@ namespace PCEnvanter
 
         void addToListView(PC pc)
         {
-            ListViewItem lvi = new ListViewItem(Interlocked.Increment(ref pclc).ToString());
-            lvi.SubItems.Add(pc.Name);
-            lvi.SubItems.Add(pc.IP == "0.0.0.0" ? "" : pc.IP);
-            lvi.SubItems.Add(pc.User?.Name);
-            lvi.SubItems.Add(pc.User?.Title);
-            lvi.SubItems.Add(pc.Cpu?.Score.ToString());
-            lvi.SubItems.Add(pc.Disk?.Score.ToString());
-            lvi.SubItems.Add(pc.IP == "0.0.0.0" ? "" : pc.Fluency.ToString("F1"));
-            lvi.SubItems.Add(pc.Model);
-            lvi.SubItems.Add(pc.Enclosure);
-            lvi.SubItems.Add(pc.Cpu?.Model);
-            lvi.SubItems.Add(pc.Memory?.ToString());
-            lvi.SubItems.Add(pc.Disk?.ToString());
-            lvi.SubItems.Add(pc.Monitor?.Size.ToString("F1").Length > 0 ? pc.Monitor?.Size.ToString("F1") + " inç" : "");
-            lvi.SubItems.Add(pc.VideoCard?.Name);
-
-            Cache.Add(lvi);
+			Cache.Add(pc.GetLVI(Interlocked.Increment(ref pclc).ToString()));
             lv_pcl.VirtualListSize = Cache.Count;
         }
 
         void addToListViewCache(PC pc)
         {
-            ListViewItem lvi = new ListViewItem(Interlocked.Increment(ref pclc).ToString());
-			lvi.SubItems.Add(pc.Name);
-			lvi.SubItems.Add(pc.IP == "0.0.0.0" ? "": pc.IP);
-			lvi.SubItems.Add(pc.User?.Name);
-			lvi.SubItems.Add(pc.User?.Title);
-			lvi.SubItems.Add(pc.Cpu?.Score.ToString());
-            lvi.SubItems.Add(pc.Disk?.Score.ToString());
-            lvi.SubItems.Add(pc.IP == "0.0.0.0" ? "" : pc.Fluency.ToString("F1"));
-            lvi.SubItems.Add(pc.Model);
-			lvi.SubItems.Add(pc.Enclosure);
-			lvi.SubItems.Add(pc.Cpu?.Model);
-			lvi.SubItems.Add(pc.Memory?.ToString());
-			lvi.SubItems.Add(pc.Disk?.ToString());
-			lvi.SubItems.Add(pc.Monitor?.Size.ToString("F1").Length > 0 ? pc.Monitor?.Size.ToString("F1") + " inç" : "");
-			lvi.SubItems.Add(pc.VideoCard?.Name);
-
-			Cache.Add(lvi);
-			
-			//lvil = lvil.OrderBy(x => Convert.ToInt32(x.SubItems[0].Text)).ToList();
-			lv_pcl.Invoke(() => { lv_pcl.VirtualListSize = Cache.Count;});
+            Cache.Add(pc.GetLVI(Interlocked.Increment(ref pclc).ToString()));
+            lv_pcl.Invoke(() => { lv_pcl.VirtualListSize = Cache.Count;});
         }
 
 
@@ -180,7 +148,10 @@ namespace PCEnvanter
 			if (fileName == "")
 			{
 				SaveFileDialog sfd = new SaveFileDialog();
-				if (sfd.ShowDialog() != DialogResult.OK)
+                sfd.Filter = "PC Liste | *.json";
+                sfd.DefaultExt = "json";
+
+                if (sfd.ShowDialog() != DialogResult.OK)
 					return;
 				fileName = sfd.FileName;
 			}
@@ -234,6 +205,43 @@ namespace PCEnvanter
 
 
             lv_pcl.Refresh();
+        }
+
+        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        {
+			selectedLvi = lv_pcl.GetItemAt(lv_pcl.PointToClient(Cursor.Position).X, lv_pcl.PointToClient(Cursor.Position).Y);
+			buBilgisayarıYenileToolStripMenuItem.Enabled = selectedLvi == null ? false : true;
+
+        }
+
+        private void buBilgisayarıYenileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+			if(selectedLvi == null) return;
+
+
+			string pcname = selectedLvi.SubItems[1].Text;
+            new Thread(() =>
+            {
+                try
+                {
+                    PC pc = pcl.pcl.FirstOrDefault(px => px.Name == pcname) ?? new PC() { Name = pcname };
+                    pc.RetrieveInfo();
+
+                    lock (Cache)
+                    {
+                        ListViewItem? lvi = Cache.FirstOrDefault(x => x.SubItems[1].Text == pcname) ?? null;
+						
+                        Cache.RemoveAll(x => x.SubItems[1].Text == pcname);
+                        Cache.Add(pc.GetLVI(lvi?.SubItems[0].Text ?? "1000"));
+						lvi = null;
+                    }
+                    lv_pcl.Invoke(() => { lv_pcl.Refresh(); });
+                }
+                catch (Exception)
+                {
+
+                }
+            }).Start();
         }
     }
 }

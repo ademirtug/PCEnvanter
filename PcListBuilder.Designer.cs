@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+            this.components = new System.ComponentModel.Container();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.dosyaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.kaydetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -41,8 +42,8 @@
             this.User = new System.Windows.Forms.ColumnHeader();
             this.Title = new System.Windows.Forms.ColumnHeader();
             this.PP = new System.Windows.Forms.ColumnHeader();
-            this.FE = new System.Windows.Forms.ColumnHeader();
             this.DiskSpeed = new System.Windows.Forms.ColumnHeader();
+            this.FE = new System.Windows.Forms.ColumnHeader();
             this.Brand = new System.Windows.Forms.ColumnHeader();
             this.Enclosure = new System.Windows.Forms.ColumnHeader();
             this.CPU = new System.Windows.Forms.ColumnHeader();
@@ -50,8 +51,12 @@
             this.Disk = new System.Windows.Forms.ColumnHeader();
             this.Monitor = new System.Windows.Forms.ColumnHeader();
             this.Graphics = new System.Windows.Forms.ColumnHeader();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.buBilgisayarıYenileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.listeEksikleriniTamamlaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -122,6 +127,7 @@
             this.Disk,
             this.Monitor,
             this.Graphics});
+            this.lv_pcl.ContextMenuStrip = this.contextMenuStrip1;
             this.lv_pcl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lv_pcl.FullRowSelect = true;
             this.lv_pcl.Location = new System.Drawing.Point(0, 0);
@@ -165,14 +171,14 @@
             this.PP.Text = "İşlem Gücü";
             this.PP.Width = 80;
             // 
+            // DiskSpeed
+            // 
+            this.DiskSpeed.Text = "Disk Hızı";
+            // 
             // FE
             // 
             this.FE.Text = "Ferahlık";
             this.FE.Width = 80;
-            // 
-            // DiskSpeed
-            // 
-            this.DiskSpeed.Text = "Disk Hızı";
             // 
             // Brand
             // 
@@ -208,6 +214,28 @@
             this.Graphics.Text = "Ekran Kartı";
             this.Graphics.Width = 140;
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.buBilgisayarıYenileToolStripMenuItem,
+            this.listeEksikleriniTamamlaToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(205, 48);
+            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
+            // 
+            // buBilgisayarıYenileToolStripMenuItem
+            // 
+            this.buBilgisayarıYenileToolStripMenuItem.Name = "buBilgisayarıYenileToolStripMenuItem";
+            this.buBilgisayarıYenileToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
+            this.buBilgisayarıYenileToolStripMenuItem.Text = "Bu Bilgisayarı Yenile";
+            this.buBilgisayarıYenileToolStripMenuItem.Click += new System.EventHandler(this.buBilgisayarıYenileToolStripMenuItem_Click);
+            // 
+            // listeEksikleriniTamamlaToolStripMenuItem
+            // 
+            this.listeEksikleriniTamamlaToolStripMenuItem.Name = "listeEksikleriniTamamlaToolStripMenuItem";
+            this.listeEksikleriniTamamlaToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
+            this.listeEksikleriniTamamlaToolStripMenuItem.Text = "Liste Eksiklerini Tamamla";
+            // 
             // PcListBuilder
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -225,6 +253,7 @@
             this.menuStrip1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -254,5 +283,8 @@
         private ColumnHeader Monitor;
         private ColumnHeader Graphics;
         private ColumnHeader DiskSpeed;
+        private ContextMenuStrip contextMenuStrip1;
+        private ToolStripMenuItem buBilgisayarıYenileToolStripMenuItem;
+        private ToolStripMenuItem listeEksikleriniTamamlaToolStripMenuItem;
     }
 }
