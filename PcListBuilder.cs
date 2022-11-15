@@ -38,11 +38,6 @@ namespace PCEnvanter
 			pcl.PrefixList = prefixList;
 			progressBar.Value = 0;
 
-			//PC pc = new PC() { Name = "P71DURSUNTEKBAL" };
-			//pc.RetrieveInfo();
-
-			//var score = pc.Fluency;
-
             BackgroundWorker bw = new BackgroundWorker();
 			bw.DoWork += Bw_DoWork;
 			bw.RunWorkerCompleted += Bw_RunWorkerCompleted;
@@ -68,15 +63,18 @@ namespace PCEnvanter
 						pc.RetrieveInfo();
 
 						lock (pcl)
-						{
 							pcl.pcl.Add(pc);
-							cpc.Enqueue(pc);
 
-							PC? pcx;
-                            while (cpc.TryDequeue(out pcx))
-								addToListViewCache(pcx);
-						}
-					}catch(Exception)
+                        cpc.Enqueue(pc);
+
+                        PC? pcx;
+                        while (cpc.TryDequeue(out pcx))
+						{
+                            addToListViewCache(pcx);
+                            Invoke(() => { progressBar.Value += 1000000 / Math.Max(1, pcNamesList.Count);});
+                        }
+                    }
+                    catch(Exception)
                     {
 						
                     }
@@ -139,7 +137,9 @@ namespace PCEnvanter
         void addToListViewCache(PC pc)
         {
             Cache.Add(pc.GetLVI(Interlocked.Increment(ref pclc).ToString()));
-            lv_pcl.Invoke(() => { lv_pcl.VirtualListSize = Cache.Count;});
+            lv_pcl.Invoke(() => { 
+				lv_pcl.VirtualListSize = Cache.Count;
+            });
         }
 
 
@@ -160,7 +160,6 @@ namespace PCEnvanter
 
         private void lv_pcl_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
         {
-			//Debug.WriteLine("lv_pcl_RetrieveVirtualItem");
 			ListViewItem? lvi = new ListViewItem("NA");
 			lvi = Cache.ElementAt(e.ItemIndex);
 			e.Item = lvi;
@@ -218,7 +217,6 @@ namespace PCEnvanter
         {
 			if(selectedLvi == null) return;
 
-
 			string pcname = selectedLvi.SubItems[1].Text;
             new Thread(() =>
             {
@@ -242,6 +240,11 @@ namespace PCEnvanter
 
                 }
             }).Start();
+        }
+
+        private void listeEksikleriniTamamlaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

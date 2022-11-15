@@ -105,6 +105,7 @@
             // 
             // progressBar
             // 
+            this.progressBar.Maximum = 1000000;
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(100, 16);
             this.progressBar.Step = 1;
@@ -235,6 +236,7 @@
             this.listeEksikleriniTamamlaToolStripMenuItem.Name = "listeEksikleriniTamamlaToolStripMenuItem";
             this.listeEksikleriniTamamlaToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.listeEksikleriniTamamlaToolStripMenuItem.Text = "Liste Eksiklerini Tamamla";
+            this.listeEksikleriniTamamlaToolStripMenuItem.Click += new System.EventHandler(this.listeEksikleriniTamamlaToolStripMenuItem_Click);
             // 
             // PcListBuilder
             // 
