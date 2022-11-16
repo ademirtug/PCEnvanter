@@ -506,14 +506,9 @@ namespace PCEnvanter
 					}
 						
 					for (int i = 0; i < sp.Length; i++)
-					{
 						if (sp[i].ToUpper().Contains("AMD"))
-						{
-							//string n = $"{sp[i + 1]} {sp[i + 2]}  {( i+3 < sp.Length ? sp[i + 3] : "") }";
-
                             return clearName($"{sp[i + 1]} {sp[i + 2]}  {(i + 3 < sp.Length ? sp[i + 3] : "")}");
-						}
-					}
+
 				}
 				catch (Exception ex)
 				{

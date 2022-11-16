@@ -103,6 +103,9 @@ namespace PCEnvanter
 		private void Bw_DoWork(object? sender, DoWorkEventArgs e)
 		{
 			sbMessage.Text = "Hazırlanıyor...";
+			progressBar.Value = 0;
+			progressBar.Enabled = true;
+
 			List<string> prefixList = (List<string>)e.Argument!;
 			List<string> pcnameslist = GetPCList(prefixList!);
 			totalPc = pcnameslist.Count;
@@ -158,19 +161,17 @@ namespace PCEnvanter
 		{
 			Cache.Add(pc.GetLVI(Interlocked.Increment(ref pclc).ToString()));
 			lv_pcl.Invoke(() => { 
-				lv_pcl.VirtualListSize = Cache.Count;
-				if(Cache.Count >= totalPc)
-				{
-					sbMessage.Text = "Hazır.";
-					progressBar.Value = 0;
-				}
-				
+				lv_pcl.VirtualListSize = Cache.Count;				
             });
 		}
 
 
 		private void kaydetToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+			sbMessage.Text = "Kaydediliyor...";
+			progressBar.Value = 0;
+			progressBar.Enabled = false;
+
 			if (fileName == "")
 			{
 				SaveFileDialog sfd = new SaveFileDialog();
@@ -274,8 +275,12 @@ namespace PCEnvanter
 			lv_pcl.VirtualListSize = 0;
 			lv_pcl.Items.Clear();
 			listeEksikleriniTamamlaToolStripMenuItem.Enabled = false;
+            sbMessage.Text = "Hazırlanıyor...";
+            progressBar.Enabled = true;
+            progressBar.Value = 0;
 
-			List<string> pcn = new List<string>();
+
+            List<string> pcn = new List<string>();
 			int pcc = pcl.pcl.Count;
 
 			foreach(PC p in pcl.pcl)
