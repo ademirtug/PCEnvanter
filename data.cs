@@ -520,7 +520,7 @@ namespace PCEnvanter
                     Main.log.Enqueue($"{DateTime.Now} - Hatâ: {Name}::Model - " + ex.ToString());
 
                 }
-				return Name;
+				return clearName(Name);
 			}
 
 		}
@@ -529,9 +529,15 @@ namespace PCEnvanter
 
 		string clearName(string n)
         {
-			return n.Replace("(tm)", "").Replace("(TM)", "").Replace("Intel(R)", "").Replace("Processor", "").Replace("  ", " ").Trim();
+			if(n.IndexOf("@") > -1)
+			{
+				n = n.Substring(0, n.IndexOf("@"));
+			}
+			n = n.Replace("(tm)", "").Replace("(TM)", "").Replace("Intel(R)", "").Replace("Processor", "");
+			n = n.Replace("CPU", "").Replace("  ", " ").Replace("   ", " ").Trim();
 
-		}
+			return n;
+        }
 	}
 
 	public class Memory
