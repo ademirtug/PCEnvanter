@@ -52,6 +52,7 @@ namespace PCEnvanter
 
         private void yeniPcListesiHazırlaToolStripMenuItem_Click(object sender, EventArgs e)
         {
+
 			try
 			{
 				PrefixBuilder pb = new PrefixBuilder(Environment.MachineName.Substring(1, 2));

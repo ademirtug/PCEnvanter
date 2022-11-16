@@ -1,8 +1,12 @@
 ﻿using NPOI.SS.Formula.Functions;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.DirectoryServices.AccountManagement;
+using System.Globalization;
+using System.IO;
 
 
 namespace PCEnvanter
@@ -17,6 +21,9 @@ namespace PCEnvanter
 		int sortColumn = -1;
 		string fileName = "";
 		int pclc = 0;
+
+		int totalPc = 0;
+
 		public PcListBuilder()
 		{
 			InitializeComponent();
@@ -37,6 +44,7 @@ namespace PCEnvanter
 		{
 			pcl.PrefixList = prefixList;
 			progressBar.Value = 0;
+			listeEksikleriniTamamlaToolStripMenuItem.Enabled = false;
 
 			BackgroundWorker bw = new BackgroundWorker();
 			bw.DoWork += Bw_DoWork;
@@ -52,6 +60,8 @@ namespace PCEnvanter
 			if (pcNamesList.Count == 0)
 				return;
 
+			totalPc = pcNamesList.Count;
+
 			progressBar.Step = 100 / Math.Max(1, pcNamesList.Count);
 			foreach (string pcname in pcNamesList)
 			{
@@ -65,6 +75,9 @@ namespace PCEnvanter
 						lock (pcl)
 							pcl.pcl.Add(pc);
 
+						if(pcl.pcl.Count == pcNamesList.Count) {
+							listeEksikleriniTamamlaToolStripMenuItem.Enabled = true;
+						}
 						cpc.Enqueue(pc);
 
 						PC? pcx;
@@ -246,7 +259,7 @@ namespace PCEnvanter
 			Cache.Clear();
 			lv_pcl.VirtualListSize = 0;
 			lv_pcl.Items.Clear();
-
+			listeEksikleriniTamamlaToolStripMenuItem.Enabled = false;
 
 			List<string> pcn = new List<string>();
 			int pcc = pcl.pcl.Count;
@@ -280,7 +293,12 @@ namespace PCEnvanter
 						lock (pcl)
 							pcl.pcl.Add(pc);
 
-						cpc.Enqueue(pc);
+                        if (pcl.pcl.Count == pcc)
+                        {
+                            listeEksikleriniTamamlaToolStripMenuItem.Enabled = true;
+                        }
+
+                        cpc.Enqueue(pc);
 
 						PC? pcx;
 						while (cpc.TryDequeue(out pcx))
@@ -297,5 +315,65 @@ namespace PCEnvanter
 			}
 
 		}
-	}
+
+        private void excelOlarakDışaAktarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+			if (pcl.pcl.Count == 0)
+				return;
+
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Excel Dosyası | *.xlsx";
+            sfd.DefaultExt = "xlsx";
+
+            if (sfd.ShowDialog() != DialogResult.OK)
+                return;
+			try
+			{
+                IWorkbook wb = new XSSFWorkbook();
+                ISheet sheet = wb.CreateSheet("PC Liste");
+
+
+                //HEADERS
+                IRow headerRow = sheet.CreateRow(0);
+                XSSFFont defaultFont = (XSSFFont)wb.CreateFont();
+                defaultFont.FontHeightInPoints = (short)11;
+                defaultFont.Color = IndexedColors.Black.Index;
+                defaultFont.IsBold = true;
+
+                XSSFCellStyle yourCellStyle = (XSSFCellStyle)wb.CreateCellStyle();
+                yourCellStyle.SetFont(defaultFont);
+                headerRow.RowStyle = yourCellStyle;
+
+                for (int i = 0; i < lv_pcl.Columns.Count; i++)
+				{
+                    ICell headerCell = headerRow.CreateCell(i);
+
+                    headerCell.SetCellValue(lv_pcl.Columns[i].Text.ToUpper(CultureInfo.GetCultureInfo("tr-TR")));
+                    sheet.AutoSizeColumn(i);
+                }
+
+				//DATA
+				for (int i = 0; i < Cache.Count; i++)
+				{
+					ListViewItem lvi = Cache.ElementAt(i);
+					IRow row = sheet.CreateRow(i+1);
+					for (int x = 0; x < lvi.SubItems.Count; x++)
+					{
+                        ICell cell = row.CreateCell(x);
+						cell.SetCellValue(lvi.SubItems[x].Text);
+                        sheet.AutoSizeColumn(x);
+                    }
+                }
+				wb.Write(new FileStream(sfd.FileName, FileMode.Create));
+				wb.Close();
+				MessageBox.Show("Kaydedildi.", "İşlem Başarılı");
+            }
+			catch (Exception)
+			{
+
+			}
+
+
+        }
+    }
 }

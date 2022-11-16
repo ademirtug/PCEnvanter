@@ -63,9 +63,9 @@ namespace PCEnvanter
 		{
 			get
 			{
-				double cpuRating = Cpu?.Score.Map(3000, 12000, 0, 3) ?? 1.0;
-				double memoryRating = Memory?.Capacity.Map((ulong)Math.Pow(2, 30) * 5, (ulong)Math.Pow(2, 30) * 10, 0, 2) ?? 1;
-				double diskRating = Disk?.Score.Map(1000, 16000, 0, 5) ?? 0;
+				double cpuRating = Cpu?.Score.Map(2000, 25000, 0, 3) ?? 1.0;
+				double memoryRating = Memory?.Capacity.Map((ulong)Math.Pow(2, 30) * 3, (ulong)Math.Pow(2, 30) * 16, 0, 2) ?? 1;
+				double diskRating = Disk?.Score.Map(500, 26000, 0, 5) ?? 0;
 
 				return Math.Max(cpuRating+memoryRating+diskRating, 1.0);
 			}

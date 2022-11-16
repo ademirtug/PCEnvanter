@@ -32,7 +32,6 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.dosyaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.kaydetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.excelDosyasınaÇevirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.progressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.lv_pcl = new System.Windows.Forms.ListView();
@@ -54,6 +53,7 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.buBilgisayarıYenileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listeEksikleriniTamamlaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.excelOlarakDışaAktarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
@@ -73,8 +73,7 @@
             // dosyaToolStripMenuItem
             // 
             this.dosyaToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.kaydetToolStripMenuItem,
-            this.excelDosyasınaÇevirToolStripMenuItem});
+            this.kaydetToolStripMenuItem});
             this.dosyaToolStripMenuItem.MergeAction = System.Windows.Forms.MergeAction.MatchOnly;
             this.dosyaToolStripMenuItem.Name = "dosyaToolStripMenuItem";
             this.dosyaToolStripMenuItem.Size = new System.Drawing.Size(51, 20);
@@ -83,15 +82,9 @@
             // kaydetToolStripMenuItem
             // 
             this.kaydetToolStripMenuItem.Name = "kaydetToolStripMenuItem";
-            this.kaydetToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.kaydetToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.kaydetToolStripMenuItem.Text = "Kaydet...";
             this.kaydetToolStripMenuItem.Click += new System.EventHandler(this.kaydetToolStripMenuItem_Click);
-            // 
-            // excelDosyasınaÇevirToolStripMenuItem
-            // 
-            this.excelDosyasınaÇevirToolStripMenuItem.Name = "excelDosyasınaÇevirToolStripMenuItem";
-            this.excelDosyasınaÇevirToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-            this.excelDosyasınaÇevirToolStripMenuItem.Text = "Excel Dosyasına Çevir";
             // 
             // statusStrip1
             // 
@@ -131,10 +124,10 @@
             this.lv_pcl.ContextMenuStrip = this.contextMenuStrip1;
             this.lv_pcl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lv_pcl.FullRowSelect = true;
-            this.lv_pcl.Location = new System.Drawing.Point(0, 0);
+            this.lv_pcl.Location = new System.Drawing.Point(0, 24);
             this.lv_pcl.MultiSelect = false;
             this.lv_pcl.Name = "lv_pcl";
-            this.lv_pcl.Size = new System.Drawing.Size(1064, 408);
+            this.lv_pcl.Size = new System.Drawing.Size(1064, 384);
             this.lv_pcl.TabIndex = 3;
             this.lv_pcl.UseCompatibleStateImageBehavior = false;
             this.lv_pcl.View = System.Windows.Forms.View.Details;
@@ -219,9 +212,10 @@
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.buBilgisayarıYenileToolStripMenuItem,
-            this.listeEksikleriniTamamlaToolStripMenuItem});
+            this.listeEksikleriniTamamlaToolStripMenuItem,
+            this.excelOlarakDışaAktarToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(205, 48);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(205, 70);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // buBilgisayarıYenileToolStripMenuItem
@@ -237,6 +231,13 @@
             this.listeEksikleriniTamamlaToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.listeEksikleriniTamamlaToolStripMenuItem.Text = "Liste Eksiklerini Tamamla";
             this.listeEksikleriniTamamlaToolStripMenuItem.Click += new System.EventHandler(this.listeEksikleriniTamamlaToolStripMenuItem_Click);
+            // 
+            // excelOlarakDışaAktarToolStripMenuItem
+            // 
+            this.excelOlarakDışaAktarToolStripMenuItem.Name = "excelOlarakDışaAktarToolStripMenuItem";
+            this.excelOlarakDışaAktarToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
+            this.excelOlarakDışaAktarToolStripMenuItem.Text = "Excel Olarak Dışa Aktar...";
+            this.excelOlarakDışaAktarToolStripMenuItem.Click += new System.EventHandler(this.excelOlarakDışaAktarToolStripMenuItem_Click);
             // 
             // PcListBuilder
             // 
@@ -266,7 +267,6 @@
 		private MenuStrip menuStrip1;
 		private ToolStripMenuItem dosyaToolStripMenuItem;
 		private ToolStripMenuItem kaydetToolStripMenuItem;
-		private ToolStripMenuItem excelDosyasınaÇevirToolStripMenuItem;
         private StatusStrip statusStrip1;
         private ToolStripProgressBar progressBar;
         private ListView lv_pcl;
@@ -288,5 +288,6 @@
         private ContextMenuStrip contextMenuStrip1;
         private ToolStripMenuItem buBilgisayarıYenileToolStripMenuItem;
         private ToolStripMenuItem listeEksikleriniTamamlaToolStripMenuItem;
+        private ToolStripMenuItem excelOlarakDışaAktarToolStripMenuItem;
     }
 }
