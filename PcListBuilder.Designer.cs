@@ -33,6 +33,7 @@
             this.dosyaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.kaydetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.sbMessage = new System.Windows.Forms.ToolStripStatusLabel();
             this.progressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.lv_pcl = new System.Windows.Forms.ListView();
             this.No = new System.Windows.Forms.ColumnHeader();
@@ -82,13 +83,14 @@
             // kaydetToolStripMenuItem
             // 
             this.kaydetToolStripMenuItem.Name = "kaydetToolStripMenuItem";
-            this.kaydetToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.kaydetToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.kaydetToolStripMenuItem.Text = "Kaydet...";
             this.kaydetToolStripMenuItem.Click += new System.EventHandler(this.kaydetToolStripMenuItem_Click);
             // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.sbMessage,
             this.progressBar});
             this.statusStrip1.Location = new System.Drawing.Point(0, 408);
             this.statusStrip1.Name = "statusStrip1";
@@ -96,12 +98,22 @@
             this.statusStrip1.TabIndex = 2;
             this.statusStrip1.Text = "statusStrip1";
             // 
+            // sbMessage
+            // 
+            this.sbMessage.Name = "sbMessage";
+            this.sbMessage.Size = new System.Drawing.Size(916, 17);
+            this.sbMessage.Spring = true;
+            this.sbMessage.Text = "Hazır.";
+            this.sbMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // progressBar
             // 
+            this.progressBar.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.progressBar.Maximum = 1000000;
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(100, 16);
             this.progressBar.Step = 1;
+            this.progressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             // 
             // lv_pcl
             // 
@@ -124,10 +136,10 @@
             this.lv_pcl.ContextMenuStrip = this.contextMenuStrip1;
             this.lv_pcl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lv_pcl.FullRowSelect = true;
-            this.lv_pcl.Location = new System.Drawing.Point(0, 24);
+            this.lv_pcl.Location = new System.Drawing.Point(0, 0);
             this.lv_pcl.MultiSelect = false;
             this.lv_pcl.Name = "lv_pcl";
-            this.lv_pcl.Size = new System.Drawing.Size(1064, 384);
+            this.lv_pcl.Size = new System.Drawing.Size(1064, 408);
             this.lv_pcl.TabIndex = 3;
             this.lv_pcl.UseCompatibleStateImageBehavior = false;
             this.lv_pcl.View = System.Windows.Forms.View.Details;
@@ -289,5 +301,6 @@
         private ToolStripMenuItem buBilgisayarıYenileToolStripMenuItem;
         private ToolStripMenuItem listeEksikleriniTamamlaToolStripMenuItem;
         private ToolStripMenuItem excelOlarakDışaAktarToolStripMenuItem;
+        private ToolStripStatusLabel sbMessage;
     }
 }

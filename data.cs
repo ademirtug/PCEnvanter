@@ -109,6 +109,7 @@ namespace PCEnvanter
 			}
 			catch (Exception ex)
 			{
+				Main.log.Enqueue($"{DateTime.Now} - Error: {Name}::getPCType() - " + ex.ToString());
 			}
 			return r;
 
@@ -125,7 +126,8 @@ namespace PCEnvanter
 			}
 			catch (Exception ex)
 			{
-			}
+                Main.log.Enqueue($"{DateTime.Now} - Error: {Name}::getVideoCard() - " + ex.ToString());
+            }
 			return vc;
 
 		}
@@ -162,7 +164,9 @@ namespace PCEnvanter
 			}
 			catch (Exception ex)
 			{
-				return null;
+                Main.log.Enqueue($"{DateTime.Now} - Error: {Name}::getPCUser() - " + ex.ToString());
+
+                return null;
 			}
 			return p;
 
@@ -187,7 +191,8 @@ namespace PCEnvanter
 			}
 			catch (Exception ex)
 			{
-			}
+               // Main.log.Enqueue($"{DateTime.Now} - Error: {Name}::getPCIP() - " + ex.ToString());
+            }
 			return "0.0.0.0";
 
 		}
@@ -219,7 +224,8 @@ namespace PCEnvanter
 			}
 			catch (Exception ex)
 			{
-			}
+                Main.log.Enqueue($"{DateTime.Now} - Error: {Name}::getPCEnclosure() - " + ex.ToString());
+            }
 			return "-";
 
 		}
@@ -237,7 +243,8 @@ namespace PCEnvanter
 			}
 			catch (Exception ex)
 			{
-				Cpu = null;
+                Main.log.Enqueue($"{DateTime.Now} - Error: {Name}::retrieveCPUInfo() - " + ex.ToString());
+                Cpu = null;
 			}
 		}
 
@@ -263,7 +270,8 @@ namespace PCEnvanter
 			}
 			catch (Exception ex)
 			{
-			}
+                Main.log.Enqueue($"{DateTime.Now} - Error: {Name}::getMonitor() - " + ex.ToString());
+            }
 			mo.Size = GetMonitorSize();
 
 
@@ -286,8 +294,8 @@ namespace PCEnvanter
 			}
 			catch (Exception ex)
 			{
-
-			}
+                Main.log.Enqueue($"{DateTime.Now} - Error: {Name}::GetMonitorSize() - " + ex.ToString());
+            }
 			return 0;
 		}
 		private Disk getDisk()
@@ -321,7 +329,8 @@ namespace PCEnvanter
 			}
 			catch (Exception ex )
 			{
-			}
+                Main.log.Enqueue($"{DateTime.Now} - Error: {Name}::getDisk() - " + ex.ToString());
+            }
 			return d;
 
 		}
@@ -341,8 +350,9 @@ namespace PCEnvanter
 			}
 			catch (Exception ex)
 			{
+                Main.log.Enqueue($"{DateTime.Now} - Error: {Name}::getMemory() - " + ex.ToString());
 
-			}
+            }
 			return mm;
 		}
 		private Wei getWei()
@@ -361,8 +371,8 @@ namespace PCEnvanter
 			}
 			catch (Exception ex)
 			{
-
-			}
+                Main.log.Enqueue($"{DateTime.Now} - Error: {Name}::getWei() - " + ex.ToString());
+            }
 			return w;
 		}
 
@@ -508,8 +518,9 @@ namespace PCEnvanter
 				}
 				catch (Exception ex)
 				{
+                    Main.log.Enqueue($"{DateTime.Now} - Error: {Name}::Model - " + ex.ToString());
 
-				}
+                }
 				return Name;
 			}
 
@@ -639,7 +650,8 @@ namespace PCEnvanter
 					}
 				}
 
-				string mm = Model.Remove(Model.LastIndexOf(" "), Model.Length - Model.LastIndexOf(" "));
+
+				string mm = Model.LastIndexOf(" ") > -1 ? Model.Remove(Model.LastIndexOf(" "), Model.Length - Model.LastIndexOf(" ")) : Model;
                 foreach (Disk d in Main.diskList)
                 {
                     if (d.Model.Contains(mm) && d.CapacityTier == CapacityTier)

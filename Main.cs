@@ -11,6 +11,7 @@ namespace PCEnvanter
 	{
 		public static List<CPU> cpuList = new List<CPU>();
         public static List<Disk> diskList = new List<Disk>();
+        public static ConcurrentQueue<string> log = new();
 
 #if DEBUG
         public static string dpath = "../../../data/";
@@ -83,5 +84,12 @@ namespace PCEnvanter
 			pcb.MdiParent = this;
 			pcb.Show();
 		}
-	}
+
+        private void işlemKütüğüToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+			LogWindow lg = new LogWindow();
+			lg.MdiParent = this;
+			lg.Show();
+        }
+    }
 }

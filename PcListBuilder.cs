@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.DirectoryServices.AccountManagement;
 using System.Globalization;
 using System.IO;
-
+using System.Reflection.PortableExecutable;
 
 namespace PCEnvanter
 {
@@ -29,7 +29,6 @@ namespace PCEnvanter
 			InitializeComponent();
 		}
 
-		//WDC WD5000AAKX-22ERMA0
 		public PcListBuilder(string fileName) : this()
 		{
 			pcl = PcList.LoadFromFile(fileName);
@@ -63,6 +62,11 @@ namespace PCEnvanter
 			totalPc = pcNamesList.Count;
 
 			progressBar.Step = 100 / Math.Max(1, pcNamesList.Count);
+
+            System.Threading.Timer tt = new System.Threading.Timer((sender) => { 
+				
+			});
+
 			foreach (string pcname in pcNamesList)
 			{
 				new Thread(() =>
@@ -75,7 +79,8 @@ namespace PCEnvanter
 						lock (pcl)
 							pcl.pcl.Add(pc);
 
-						if(pcl.pcl.Count == pcNamesList.Count) {
+						if (pcl.pcl.Count == pcNamesList.Count)
+						{
 							listeEksikleriniTamamlaToolStripMenuItem.Enabled = true;
 						}
 						cpc.Enqueue(pc);
@@ -84,21 +89,23 @@ namespace PCEnvanter
 						while (cpc.TryDequeue(out pcx))
 						{
 							addToListViewCache(pcx);
-							Invoke(() => { progressBar.Value += 1000000 / Math.Max(1, pcNamesList.Count);});
+							Invoke(() => { progressBar.Value += 1000000 / Math.Max(1, pcNamesList.Count); });
 						}
 					}
-					catch(Exception)
+					catch
 					{
-						
 					}
 				}).Start();
+
 			}
 		}
 
 		private void Bw_DoWork(object? sender, DoWorkEventArgs e)
 		{
+			sbMessage.Text = "Hazırlanıyor...";
 			List<string> prefixList = (List<string>)e.Argument!;
 			List<string> pcnameslist = GetPCList(prefixList!);
+			totalPc = pcnameslist.Count;
 			e.Result = pcnameslist;
 		
 		}
@@ -131,9 +138,10 @@ namespace PCEnvanter
 #if DEBUG
 				return new PrincipalContext(ContextType.Domain, "csb.local", "akin.demirtug", "Sandalye22");
 #else
-				return new PrincipalContext(ContextType.Domain, "csb.local");
+                return new PrincipalContext(ContextType.Domain, "csb.local");
 #endif
-			}catch(Exception)
+			}
+			catch (Exception)
 			{
 
 			}
@@ -151,7 +159,15 @@ namespace PCEnvanter
 			Cache.Add(pc.GetLVI(Interlocked.Increment(ref pclc).ToString()));
 			lv_pcl.Invoke(() => { 
 				lv_pcl.VirtualListSize = Cache.Count;
-			});
+				if(Cache.Count >= totalPc)
+				{
+					sbMessage.Text = "Hazır.";
+					progressBar.Value = 0;
+					
+				}
+                Debug.WriteLine(Cache.Count + "/" + totalPc);
+				
+            });
 		}
 
 
