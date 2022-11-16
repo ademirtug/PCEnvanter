@@ -163,9 +163,7 @@ namespace PCEnvanter
 				{
 					sbMessage.Text = "Hazır.";
 					progressBar.Value = 0;
-					
 				}
-                Debug.WriteLine(Cache.Count + "/" + totalPc);
 				
             });
 		}

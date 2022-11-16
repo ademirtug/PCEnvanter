@@ -63,9 +63,9 @@ namespace PCEnvanter
 		{
 			get
 			{
-				double cpuRating = Cpu?.Score.Map(2000, 25000, 0, 3) ?? 1.0;
+				double cpuRating = Cpu?.Score.Map(2000, 15000, 0, 3) ?? 1.0;
 				double memoryRating = Memory?.Capacity.Map((ulong)Math.Pow(2, 30) * 3, (ulong)Math.Pow(2, 30) * 16, 0, 2) ?? 1;
-				double diskRating = Disk?.Score.Map(500, 26000, 0, 5) ?? 0;
+				double diskRating = Disk?.Score.Map(500, 16000, 0, 5) ?? 0;
 
 				return Math.Max(cpuRating+memoryRating+diskRating, 1.0);
 			}
@@ -91,7 +91,6 @@ namespace PCEnvanter
 			Memory = getMemory();
 			Monitor = getMonitor();
 			sw.Stop();
-			Debug.WriteLine(Name + " Completed. in:" + sw.Elapsed);
 			return true;
 		}
 
@@ -109,7 +108,7 @@ namespace PCEnvanter
 			}
 			catch (Exception ex)
 			{
-				Main.log.Enqueue($"{DateTime.Now} - Error: {Name}::getPCType() - " + ex.ToString());
+				Main.log.Enqueue($"{DateTime.Now} - Hatâ: {Name}::getPCType() - " + ex.ToString());
 			}
 			return r;
 
@@ -126,7 +125,7 @@ namespace PCEnvanter
 			}
 			catch (Exception ex)
 			{
-                Main.log.Enqueue($"{DateTime.Now} - Error: {Name}::getVideoCard() - " + ex.ToString());
+                Main.log.Enqueue($"{DateTime.Now} - Hatâ: {Name}::getVideoCard() - " + ex.ToString());
             }
 			return vc;
 
@@ -164,7 +163,7 @@ namespace PCEnvanter
 			}
 			catch (Exception ex)
 			{
-                Main.log.Enqueue($"{DateTime.Now} - Error: {Name}::getPCUser() - " + ex.ToString());
+                Main.log.Enqueue($"{DateTime.Now} - Hatâ: {Name}::getPCUser() - " + ex.ToString());
 
                 return null;
 			}
@@ -191,7 +190,7 @@ namespace PCEnvanter
 			}
 			catch (Exception ex)
 			{
-               // Main.log.Enqueue($"{DateTime.Now} - Error: {Name}::getPCIP() - " + ex.ToString());
+               // Main.log.Enqueue($"{DateTime.Now} - Hatâ: {Name}::getPCIP() - " + ex.ToString());
             }
 			return "0.0.0.0";
 
@@ -224,7 +223,7 @@ namespace PCEnvanter
 			}
 			catch (Exception ex)
 			{
-                Main.log.Enqueue($"{DateTime.Now} - Error: {Name}::getPCEnclosure() - " + ex.ToString());
+                Main.log.Enqueue($"{DateTime.Now} - Hatâ: {Name}::getPCEnclosure() - " + ex.ToString());
             }
 			return "-";
 
@@ -243,7 +242,7 @@ namespace PCEnvanter
 			}
 			catch (Exception ex)
 			{
-                Main.log.Enqueue($"{DateTime.Now} - Error: {Name}::retrieveCPUInfo() - " + ex.ToString());
+                Main.log.Enqueue($"{DateTime.Now} - Hatâ: {Name}::retrieveCPUInfo() - " + ex.ToString());
                 Cpu = null;
 			}
 		}
@@ -270,7 +269,7 @@ namespace PCEnvanter
 			}
 			catch (Exception ex)
 			{
-                Main.log.Enqueue($"{DateTime.Now} - Error: {Name}::getMonitor() - " + ex.ToString());
+                Main.log.Enqueue($"{DateTime.Now} - Hatâ: {Name}::getMonitor() - " + ex.ToString());
             }
 			mo.Size = GetMonitorSize();
 
@@ -294,7 +293,7 @@ namespace PCEnvanter
 			}
 			catch (Exception ex)
 			{
-                Main.log.Enqueue($"{DateTime.Now} - Error: {Name}::GetMonitorSize() - " + ex.ToString());
+                Main.log.Enqueue($"{DateTime.Now} - Hatâ: {Name}::GetMonitorSize() - " + ex.ToString());
             }
 			return 0;
 		}
@@ -329,7 +328,7 @@ namespace PCEnvanter
 			}
 			catch (Exception ex )
 			{
-                Main.log.Enqueue($"{DateTime.Now} - Error: {Name}::getDisk() - " + ex.ToString());
+                Main.log.Enqueue($"{DateTime.Now} - Hatâ: {Name}::getDisk() - " + ex.ToString());
             }
 			return d;
 
@@ -350,7 +349,7 @@ namespace PCEnvanter
 			}
 			catch (Exception ex)
 			{
-                Main.log.Enqueue($"{DateTime.Now} - Error: {Name}::getMemory() - " + ex.ToString());
+                Main.log.Enqueue($"{DateTime.Now} - Hatâ: {Name}::getMemory() - " + ex.ToString());
 
             }
 			return mm;
@@ -371,7 +370,7 @@ namespace PCEnvanter
 			}
 			catch (Exception ex)
 			{
-                Main.log.Enqueue($"{DateTime.Now} - Error: {Name}::getWei() - " + ex.ToString());
+                Main.log.Enqueue($"{DateTime.Now} - Hatâ: {Name}::getWei() - " + ex.ToString());
             }
 			return w;
 		}
@@ -518,7 +517,7 @@ namespace PCEnvanter
 				}
 				catch (Exception ex)
 				{
-                    Main.log.Enqueue($"{DateTime.Now} - Error: {Name}::Model - " + ex.ToString());
+                    Main.log.Enqueue($"{DateTime.Now} - Hatâ: {Name}::Model - " + ex.ToString());
 
                 }
 				return Name;
