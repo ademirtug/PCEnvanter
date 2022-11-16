@@ -63,11 +63,11 @@ namespace PCEnvanter
 		{
 			get
 			{
-				double cpuRating = Cpu?.Score.Map(2000, 15000, 0, 3) ?? 1.0;
+				double cpuRating = Cpu?.Score.Map(1000, 18000, 0, 3) ?? 1.0;
 				double memoryRating = Memory?.Capacity.Map((ulong)Math.Pow(2, 30) * 3, (ulong)Math.Pow(2, 30) * 16, 0, 2) ?? 1;
-				double diskRating = Disk?.Score.Map(500, 16000, 0, 5) ?? 0;
+				double diskRating = Disk?.Score.Map(300, 16000, 0, 5) ?? 0;
 
-				return Math.Max(cpuRating+memoryRating+diskRating, 1.0);
+				return Math.Max(cpuRating+memoryRating+diskRating, 0.1);
 			}
 		}
 
