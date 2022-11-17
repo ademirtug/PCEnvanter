@@ -4,6 +4,8 @@ using System.DirectoryServices.AccountManagement;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.ComponentModel;
+using NPOI.XWPF.UserModel;
+using System.Globalization;
 
 namespace PCEnvanter
 {
@@ -15,12 +17,8 @@ namespace PCEnvanter
 
 #if DEBUG
         public static string dpath = "../../../data/";
-		string cpuDataFile = "../../../data/data.txt";
-        string diskDataFile = "../../../data/hdd_data.txt";
 #else
-		public static string dpath = "./data/";
-		string cpuDataFile = "./data/data.txt";
-		string diskDataFile = "./data/hdd_data.txt";
+		public static string dpath = "data/";
 
 #endif
 
@@ -28,27 +26,33 @@ namespace PCEnvanter
 		{
 			InitializeComponent();
 
-            foreach (string line in File.ReadAllLines(cpuDataFile))
+
+
+            Main.log.Enqueue($"{System.Text.Encoding.Default.ToString()}");
+
+            string[] cpuLines = Properties.Resources.cpuData.Split("\r\n");
+            foreach (string line in cpuLines)
 			{
 				string[] sp = line.Split("\t");
-				Main.cpuList.Add(new CPU() { Name = sp[0], Score = Convert.ToDouble(sp[1]) });
+				Main.cpuList.Add(new CPU() { Name = sp[0], Score = Convert.ToDouble(sp[1], new NumberFormatInfo() { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }) });
 			}
 
-			string[] dlines = File.ReadAllLines(diskDataFile);
-            foreach (string lx in File.ReadAllLines(diskDataFile))
+            string[] diskLines = Properties.Resources.hddData.Split("\r\n");
+            foreach (string lx in diskLines)
             {
                 string[] sp = lx.Split("\t");
-                string scap = sp[1].Split(" ")[0];
+				double dcap = Convert.ToDouble(sp[1].Split(" ")[0], new NumberFormatInfo() { NumberDecimalSeparator = ".", NumberGroupSeparator = ","} );
+                double sib = dcap * (sp[1].Split(" ")[1] == "GB" ? 1024*1024*1024 : (double)1024*1024*1024*1024);
+				double ds = Convert.ToDouble(sp[2], new NumberFormatInfo() { NumberDecimalSeparator = ".", NumberGroupSeparator = "," });
 
-                double sib = Convert.ToDouble(scap) * (sp[1].Split(" ")[1] == "GB" ? 1024*1024*1024 : (double)1024*1024*1024*1024);
-
-                Main.diskList.Add(new Disk() { Model = sp[0], scap=sp[1], Capacity=Convert.ToUInt64(sib), Score = Convert.ToDouble(sp[2]) });
+                Main.diskList.Add(new Disk() { Model = sp[0], scap=sp[1], Capacity=Convert.ToUInt64(sib), Score = ds });
             }
         }
 
 		private void destekAlToolStripMenuItem_Click(object sender, EventArgs e)
         {
-			MessageBox.Show("Sorularınız için akin.demirtug@csb.gov.tr adresine mesaj gönderebilirsiniz.", "Destek Al");
+            
+            MessageBox.Show("Sorularınız için akin.demirtug@csb.gov.tr adresine mesaj gönderebilirsiniz.", "Destek Al");
         }
 
         private void yeniPcListesiHazırlaToolStripMenuItem_Click(object sender, EventArgs e)

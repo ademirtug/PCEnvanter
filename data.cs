@@ -5,6 +5,8 @@ using System.Management;
 using System.Text;
 using System.DirectoryServices;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using System;
 
 namespace PCEnvanter
 {
@@ -19,7 +21,6 @@ namespace PCEnvanter
 		{
 			path = path == "" ? Main.dpath + "pc_liste.json" : path;
 
-			//C:\Users\akn\Desktop\data
 			JsonSerializerOptions options = new JsonSerializerOptions { WriteIndented = true };
 			string json = JsonSerializer.Serialize<PcList>(this, options);
 
@@ -306,7 +307,7 @@ namespace PCEnvanter
                 foreach (ManagementObject m in Query(Name, "SELECT * FROM MSFT_PhysicalDisk", true))
 				{
 
-                    d.MediaType = m["MediaType"]?.ToString() ?? "0";
+                    d.MediaType = m["MediaType"]?.ToUTF8() ?? "0";
 					d.BusType = m["BusType"]?.ToString() ?? "0";
                     
 					//usb türlerini geç
@@ -318,8 +319,8 @@ namespace PCEnvanter
 					{
 						list.Add(y.Name + "=" + y.Value);
 					}
-                    d.Model = m["Model"]?.ToString() ?? "";
-					d.FriendlyName = m["FriendlyName"]?.ToString() ?? "";
+                    d.Model = m["Model"]?.ToUTF8() ?? "";
+					d.FriendlyName = m["FriendlyName"]?.ToUTF8() ?? "";
 					d.Capacity += Convert.ToUInt64(m["Size"]?.ToString() ?? "0");
 					break;
 
@@ -353,26 +354,6 @@ namespace PCEnvanter
 
             }
 			return mm;
-		}
-		private Wei getWei()
-		{
-			Wei w = new Wei();
-
-			try
-			{
-				foreach (ManagementObject m in Query(Name, "SELECT * FROM Win32_WinSAT"))
-				{
-					w.Cpu = Convert.ToDouble(m["CPUScore"]?.ToString() ?? "0");
-					w.Disk = Convert.ToDouble(m["DiskScore"]?.ToString() ?? "0");
-					w.Graphics = Convert.ToDouble(m["GraphicsScore"]?.ToString() ?? "0");
-					w.Memory = Convert.ToDouble(m["MemoryScore"]?.ToString() ?? "0");
-				}
-			}
-			catch (Exception ex)
-			{
-                Main.log.Enqueue($"{DateTime.Now} - Hatâ: {Name}::getWei() - " + ex.ToString());
-            }
-			return w;
 		}
 
 		private ManagementObjectCollection Query(string Name, string q, bool isDisk = false, bool isMonitor = false)
@@ -445,7 +426,8 @@ namespace PCEnvanter
 		public CPU(){}
 		public CPU(string raw){}
 
-		public double Score
+        [JsonIgnore]
+        public double Score
 		{
 			get
 			{
@@ -528,8 +510,13 @@ namespace PCEnvanter
 			{
 				n = n.Substring(0, n.IndexOf("@"));
 			}
-			n = n.Replace("(tm)", "").Replace("(TM)", "").Replace("Intel(R)", "").Replace("Processor", "");
-			n = n.Replace("CPU", "").Replace("  ", " ").Replace("   ", " ").Trim();
+            if (n.IndexOf("CPU") > -1)
+            {
+                n = n.Substring(0, n.IndexOf("CPU"));
+            }
+
+            n = n.Replace("(tm)", "").Replace("Core(TM)", "").Replace("Intel(R)", "").Replace("Processor", "");
+			n = n.Replace("  ", " ").Replace("   ", " ").Trim();
 
 			return n;
         }
@@ -572,22 +559,6 @@ namespace PCEnvanter
 		}
 	}
 
-	public class Wei
-	{
-		public double Cpu { get; set; } = 0;
-		public double Graphics { get; set; } = 0;
-		public double Disk { get; set; } = 0;
-		public double Memory { get; set; } = 0;
-		public double Overall 
-		{ 
-			get 
-			{
-				return 0;
-			} 
-		}
-
-	}
-
 	public class Disk
 	{
 		double _score = 0;
@@ -596,7 +567,7 @@ namespace PCEnvanter
 		public string Model
 		{
 			get { return _model; }
-			set { _model = value.Replace("-", " ").Trim(); }
+			set { _model = value.Replace("-", " ").Trim().ToUpper(); }
 		}
 		public string FriendlyName { get; set; } = "";
 		public ulong Capacity { get; set; } = 0;
@@ -632,6 +603,8 @@ namespace PCEnvanter
 		public string scap { get; set; } = "";
 		public string MediaType { get; set; } = "";
 		public string BusType { get; set; } = "";
+
+		[JsonIgnore]
 		public double Score
 		{
 			get
@@ -652,6 +625,7 @@ namespace PCEnvanter
 
 
 				string mm = Model.LastIndexOf(" ") > -1 ? Model.Remove(Model.LastIndexOf(" "), Model.Length - Model.LastIndexOf(" ")) : Model;
+
                 foreach (Disk d in Main.diskList)
                 {
                     if (d.Model.Contains(mm) && d.CapacityTier == CapacityTier)
@@ -660,7 +634,7 @@ namespace PCEnvanter
                         return _score;
                     }
                 }
-				_score = MediaType == "3" || MediaType == "0" ? 600 : 11000;
+				_score = MediaType == "3" || MediaType == "0" ? 600 : 8500;
                 return _score;
             }
             set
@@ -693,6 +667,7 @@ namespace PCEnvanter
 
 		public string UserName { get; set; } = "";
 
+		[JsonIgnore]
 		public string UniName
 		{
 			get
@@ -732,7 +707,6 @@ namespace PCEnvanter
 					stringBuilder.Append(c);
 				}
 			}
-
 			return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
 		}
 
@@ -768,6 +742,15 @@ namespace PCEnvanter
 		{
 			return (value < min) ? min : (value > max) ? max : value;
 		}
+
+        public static string ToUTF8(this object value)
+        {
+            byte[] bytes = Encoding.Default.GetBytes(value.ToString());
+            string ux = Encoding.UTF8.GetString(bytes);
+
+			return ux;
+            //return (value < min) ? min : (value > max) ? max : value;
+        }
 
 	}
 }
