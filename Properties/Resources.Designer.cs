@@ -97,5 +97,26 @@ namespace PCEnvanter.Properties {
                 return ResourceManager.GetString("hddData", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to -Yeni bir liste hazırlamak için:
+        ///	* Dosya-&gt;Yeni-&gt;Pc Listesi Hazırlayı seçin
+        ///	* Gelen ekranda hangi adla başlayan bilgisayarları aratmak istiyorsanız bunları ; ile ayırarak girin.
+        ///	* Yeşil Göstergenin dolmaya çok yakınken işlemi bitmiş kabul edebilirsiniz.
+        ///	  bekleme gerekçesi artık var olmayan bilgisayarlarıda sorgulaması.
+        ///
+        ///-Bir Listeyi kaydetmek için:
+        ///	* Bir liste Açın
+        ///	* Dosya-&gt;Kaydeti seçin 
+        ///
+        ///-Kayıtlı Listeyi Açmak için:
+        ///	* Dosya-&gt;Aç-&gt;Pc Listeyi seçin
+        ///	* Gelen ekranda &quot;json&quot; uzantı kayıt dosy [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string kk {
+            get {
+                return ResourceManager.GetString("kk", resourceCulture);
+            }
+        }
     }
 }

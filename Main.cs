@@ -95,5 +95,12 @@ namespace PCEnvanter
 			lg.MdiParent = this;
 			lg.Show();
         }
+
+        private void kullanmaKlavuzuToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+			UserManual um = new UserManual();
+			um.MdiParent = this;
+			um.Show();
+        }
     }
 }

@@ -1,0 +1,23 @@
+﻿-Yeni bir liste hazırlamak için:
+	* Dosya->Yeni->Pc Listesi Hazırlayı seçin
+	* Gelen ekranda hangi adla başlayan bilgisayarları aratmak istiyorsanız bunları ; ile ayırarak girin.
+	* Yeşil Göstergenin dolmaya çok yakınken işlemi bitmiş kabul edebilirsiniz.
+	  bekleme gerekçesi artık var olmayan bilgisayarlarıda sorgulaması.
+
+-Bir Listeyi kaydetmek için:
+	* Bir liste Açın
+	* Dosya->Kaydeti seçin 
+
+-Kayıtlı Listeyi Açmak için:
+	* Dosya->Aç->Pc Listeyi seçin
+	* Gelen ekranda "json" uzantı kayıt dosyanız bulun, seçin ve açın
+
+-Var olan Listeyi tamamlamak için:
+	* Bir liste Açın
+	* Listeye sağ tıklayın
+	* Liste Eksiklerini Tamamlayı seçin
+
+-Var olan Listeyi Excel dosyasına çevirmek için:
+	* Bir liste Açın
+	* Listeye sağ tıklayın
+	* Excel Olarak Dışa Aktarı seçin

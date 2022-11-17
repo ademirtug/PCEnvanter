@@ -567,7 +567,7 @@ namespace PCEnvanter
 		public string Model
 		{
 			get { return _model; }
-			set { _model = value.Replace("-", " ").Trim().ToUpper(); }
+			set { _model = value.Replace("-", " ").Replace("SATA", "").Replace("  ", " ").Trim().ToUpper(); }
 		}
 		public string FriendlyName { get; set; } = "";
 		public ulong Capacity { get; set; } = 0;

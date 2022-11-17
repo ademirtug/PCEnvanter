@@ -124,4 +124,7 @@
   <data name="hddData" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\hddData.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1254</value>
   </data>
+  <data name="kk" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\data\kk.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
 </root>

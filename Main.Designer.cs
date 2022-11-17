@@ -39,6 +39,8 @@
             this.yardımToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.destekAlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.işlemKütüğüToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.kullanmaKlavuzuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -109,6 +111,8 @@
             // yardımToolStripMenuItem
             // 
             this.yardımToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.kullanmaKlavuzuToolStripMenuItem,
+            this.toolStripMenuItem2,
             this.destekAlToolStripMenuItem,
             this.işlemKütüğüToolStripMenuItem});
             this.yardımToolStripMenuItem.Name = "yardımToolStripMenuItem";
@@ -118,16 +122,28 @@
             // destekAlToolStripMenuItem
             // 
             this.destekAlToolStripMenuItem.Name = "destekAlToolStripMenuItem";
-            this.destekAlToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.destekAlToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.destekAlToolStripMenuItem.Text = "Destek Al";
             this.destekAlToolStripMenuItem.Click += new System.EventHandler(this.destekAlToolStripMenuItem_Click);
             // 
             // işlemKütüğüToolStripMenuItem
             // 
             this.işlemKütüğüToolStripMenuItem.Name = "işlemKütüğüToolStripMenuItem";
-            this.işlemKütüğüToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.işlemKütüğüToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.işlemKütüğüToolStripMenuItem.Text = "İşlem Kütüğü";
             this.işlemKütüğüToolStripMenuItem.Click += new System.EventHandler(this.işlemKütüğüToolStripMenuItem_Click);
+            // 
+            // kullanmaKlavuzuToolStripMenuItem
+            // 
+            this.kullanmaKlavuzuToolStripMenuItem.Name = "kullanmaKlavuzuToolStripMenuItem";
+            this.kullanmaKlavuzuToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.kullanmaKlavuzuToolStripMenuItem.Text = "Kullanma Klavuzu";
+            this.kullanmaKlavuzuToolStripMenuItem.Click += new System.EventHandler(this.kullanmaKlavuzuToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(165, 6);
             // 
             // Main
             // 
@@ -159,5 +175,7 @@
 		private ToolStripMenuItem prepareNewPcList;
         private ToolStripMenuItem işlemKütüğüToolStripMenuItem;
         private ToolStripMenuItem windowToolStripMenuItem;
+        private ToolStripMenuItem kullanmaKlavuzuToolStripMenuItem;
+        private ToolStripSeparator toolStripMenuItem2;
     }
 }
