@@ -26,8 +26,6 @@ namespace PCEnvanter
 		{
 			InitializeComponent();
 
-
-
             Main.log.Enqueue($"{System.Text.Encoding.Default.ToString()}");
 
             string[] cpuLines = Properties.Resources.cpuData.Split("\r\n");
@@ -51,13 +49,11 @@ namespace PCEnvanter
 
 		private void destekAlToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
             MessageBox.Show("Sorularınız için akin.demirtug@csb.gov.tr adresine mesaj gönderebilirsiniz.", "Destek Al");
         }
 
         private void yeniPcListesiHazırlaToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
 			try
 			{
 				PrefixBuilder pb = new PrefixBuilder(Environment.MachineName.Substring(1, 2));
@@ -70,9 +66,7 @@ namespace PCEnvanter
 			}
 			catch (Exception)
 			{
-
 			}
-
 		}
 
 		private void pCListeToolStripMenuItem_Click(object sender, EventArgs e)

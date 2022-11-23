@@ -91,10 +91,32 @@ namespace PCEnvanter
 			Disk = getDisk();
 			Memory = getMemory();
 			Monitor = getMonitor();
+			getSoftwareData();
 			sw.Stop();
 			return true;
 		}
 
+		private void getSoftwareData()
+		{
+			try
+			{
+                List<string> ndata = new List<string>();
+                foreach (var m in Query(Name, "SELECT MACAddress, Speed, Name FROM Win32_NetworkAdapter"))
+                {
+					ndata.Add("Name: " + m["Name"]?.ToString() + " - Speed:" + m["Speed"]?.ToString());
+                }
+
+                List<string> data = new List<string>();
+                foreach (ManagementObject m in Query(Name, "SELECT Name, Version, InstallDate FROM Win32_Product"))
+                {
+					data.Add(m["Name"]?.ToString() + ": " + m["Version"]?.ToString());
+				}
+			}
+			catch(Exception ex)
+			{
+				
+			}
+        }
 		private string[] getPCType()
 		{
 			string[] r = new string[] { "", "" };
