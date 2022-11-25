@@ -45,8 +45,6 @@ namespace PCEnvanter
 			progressBar.Value = 0;
 			listeEksikleriniTamamlaToolStripMenuItem.Enabled = false;
 
-
-
 			BackgroundWorker bw = new BackgroundWorker();
 			bw.DoWork += Bw_DoWork;
 			bw.RunWorkerCompleted += Bw_RunWorkerCompleted;
