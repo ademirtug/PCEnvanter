@@ -45,6 +45,8 @@ namespace PCEnvanter
 			progressBar.Value = 0;
 			listeEksikleriniTamamlaToolStripMenuItem.Enabled = false;
 
+
+
 			BackgroundWorker bw = new BackgroundWorker();
 			bw.DoWork += Bw_DoWork;
 			bw.RunWorkerCompleted += Bw_RunWorkerCompleted;
@@ -271,34 +273,52 @@ namespace PCEnvanter
 
 		private void listeEksikleriniTamamlaToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			Cache.Clear();
-			lv_pcl.VirtualListSize = 0;
-			lv_pcl.Items.Clear();
-			listeEksikleriniTamamlaToolStripMenuItem.Enabled = false;
+            BackgroundWorker bw = new BackgroundWorker();
+            bw.DoWork += Bw_DoWork;
+            bw.RunWorkerCompleted += RefreshBw_RunWorkerCompleted;
+            bw.RunWorkerAsync(pcl.PrefixList);
+        }
+
+        private void RefreshBw_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Result == null)
+                return;
+            List<string> pcNamesList = (List<string>)e.Result;
+            if (pcNamesList.Count == 0)
+                return;
+
+            Cache.Clear();
+            lv_pcl.VirtualListSize = 0;
+            lv_pcl.Items.Clear();
+            listeEksikleriniTamamlaToolStripMenuItem.Enabled = false;
             sbMessage.Text = "Hazırlanıyor...";
             progressBar.Enabled = true;
             progressBar.Value = 0;
 
 
+
             List<string> pcn = new List<string>();
-			int pcc = pcl.pcl.Count;
+            int pcc = pcl.pcl.Count;
 
-			foreach(PC p in pcl.pcl)
-			{
+            foreach (string pcx in pcNamesList)
+            {
+				PC? p = pcl.pcl.FirstOrDefault(x => x.Name == pcx);
+				if(p == null)
+                    pcn.Add(pcx);
+
 				if(p.IP == "0.0.0.0")
-				{
-					pcn.Add(p.Name);
-				}
-			}
+					pcn.Add(pcx);
 
-			foreach(string pcname in pcn)
+            }
+
+			foreach (string pcname in pcn)
 				pcl.pcl.RemoveAll(px => px.Name == pcname);
 
 			foreach (PC pc in pcl.pcl)
 				cpc.Enqueue(pc);
 
 
-			progressBar.Value = (1000000/pcc)*cpc.Count;
+			progressBar.Value = (1000000 / pcc) * cpc.Count;
 
 			foreach (string pcname in pcn)
 			{
@@ -312,19 +332,19 @@ namespace PCEnvanter
 						lock (pcl)
 							pcl.pcl.Add(pc);
 
-                        if (pcl.pcl.Count == pcc)
-                        {
-                            listeEksikleriniTamamlaToolStripMenuItem.Enabled = true;
-                        }
+						if (pcl.pcl.Count == pcc)
+						{
+							listeEksikleriniTamamlaToolStripMenuItem.Enabled = true;
+						}
 
-                        cpc.Enqueue(pc);
+						cpc.Enqueue(pc);
 
 						PC? pcx;
 						while (cpc.TryDequeue(out pcx))
 						{
 							addToListViewCache(pcx);
-                            Invoke(() => { long v = 1000000 / pcc; if (progressBar.Value + v <= 1000000) progressBar.Value += 1000000 / pcc; });
-                        }
+							Invoke(() => { long v = 1000000 / pcc; if (progressBar.Value + v <= 1000000) progressBar.Value += 1000000 / pcc; });
+						}
 					}
 					catch (Exception)
 					{
@@ -371,7 +391,7 @@ namespace PCEnvanter
                     sheet.AutoSizeColumn(i);
                 }
 
-				//DATA
+				//DATsA
 				for (int i = 0; i < Cache.Count; i++)
 				{
 					ListViewItem lvi = Cache.ElementAt(i);
@@ -394,5 +414,6 @@ namespace PCEnvanter
 
 
         }
+
     }
 }

@@ -7,6 +7,7 @@ using System.DirectoryServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System;
+using System.Text.RegularExpressions;
 
 namespace PCEnvanter
 {
@@ -57,7 +58,9 @@ namespace PCEnvanter
 
 		public Monitor? Monitor { get; set; }
 
-		public VideoCard? VideoCard { get; set; } 
+		public VideoCard? VideoCard { get; set; }
+
+		public List<Software> Softwares { get; set; } = new List<Software>();
 
 		public string Enclosure { get; set; } = "";
 		public double Fluency
@@ -100,18 +103,32 @@ namespace PCEnvanter
 		{
 			try
 			{
-                List<string> ndata = new List<string>();
-                foreach (var m in Query(Name, "SELECT MACAddress, Speed, Name FROM Win32_NetworkAdapter"))
-                {
-					ndata.Add("Name: " + m["Name"]?.ToString() + " - Speed:" + m["Speed"]?.ToString());
-                }
+     //           List<string> ndata = new List<string>();
+     //           foreach (var m in Query(Name, "SELECT MACAddress, Speed, Name FROM Win32_NetworkAdapter"))
+     //           {
+					//ndata.Add("Name: " + m["Name"]?.ToString() + " - Speed:" + m["Speed"]?.ToString());
+     //           }
 
                 List<string> data = new List<string>();
                 foreach (ManagementObject m in Query(Name, "SELECT Name, Version, InstallDate FROM Win32_Product"))
                 {
 					data.Add(m["Name"]?.ToString() + ": " + m["Version"]?.ToString());
+					Softwares.Add(new Software() { Name = m["Name"]?.ToString() ?? "", Version = m["Version"]?.ToString() ?? "" });
 				}
-			}
+
+				data.Sort();
+				//string pgo = "";
+				//foreach (ManagementObject m in Query(Name, "SELECT * FROM RSOP_GPO", isGP: true))
+    //            {
+				//	foreach (PropertyData q in m.Properties)
+				//	{
+				//		pgo += q.Name + " - " + q.Value + "\r\n";
+				//	}
+
+				//	pgo += "\r\n"; pgo += "\r\n"; pgo += "\r\n";
+
+    //            }
+            }
 			catch(Exception ex)
 			{
 				
@@ -378,7 +395,7 @@ namespace PCEnvanter
 			return mm;
 		}
 
-		private ManagementObjectCollection Query(string Name, string q, bool isDisk = false, bool isMonitor = false)
+		private ManagementObjectCollection Query(string Name, string q, bool isDisk = false, bool isMonitor = false, bool isGP = false)
 		{
 			string scope = "";
 
@@ -386,7 +403,9 @@ namespace PCEnvanter
 				scope = "\\\\" + Name + "\\root\\microsoft\\windows\\storage";
 			else if (isMonitor)
 				scope = "\\\\" + Name + "\\root\\wmi";
-			else
+            else if (isGP)
+                scope = "\\\\" + Name + "\\root\\rsop\\Computer";
+            else
 				scope = "\\\\" + Name + "\\root\\CIMV2";
 
 			ManagementScope? ms = null;
@@ -412,6 +431,11 @@ namespace PCEnvanter
 
 		public ListViewItem GetLVI(string pclc)
 		{
+			if(Softwares.Count> 1)
+			{
+				int stop = 1;
+			}
+
             ListViewItem lvi = new ListViewItem(pclc);
             lvi.SubItems.Add(Name);
             lvi.SubItems.Add(IP == "0.0.0.0" ? "" : IP);
@@ -427,11 +451,15 @@ namespace PCEnvanter
             lvi.SubItems.Add(Disk?.ToString());
             lvi.SubItems.Add(Monitor?.Size.ToString("F1").Length > 0 ? Monitor?.Size.ToString("F1") + " inç" : "");
             lvi.SubItems.Add(VideoCard?.Name);
+            lvi.SubItems.Add(Softwares.FirstOrDefault(sx => sx.Name.Contains("Explorer"))?.Version ?? "");//ie
+            lvi.SubItems.Add(Softwares.FirstOrDefault(sx => sx.Name.Contains("Chrome"))?.Version ?? "");//chrome
+            lvi.SubItems.Add(Softwares.FirstOrDefault(sx => sx.Name.Contains("Firefox"))?.Version ?? "");//firefox
+            lvi.SubItems.Add(Softwares.FirstOrDefault(sx => sx.Name.RegexMatch(@"Java [\d]{1} Update [\d]+(?!.*64).*$+")?.Length > 0)?.Version ?? "" );//java32
+            lvi.SubItems.Add(Softwares.FirstOrDefault(sx => sx.Name.Contains(@"Java [\d]{1} Update [\d]+ \(64"))?.Version ?? "");//java64
 
-			return lvi;
+            return lvi;
         }
 	}
-
 	public class Brand
 	{
 		public string Manufacturer { get; set; } = "";
@@ -440,7 +468,6 @@ namespace PCEnvanter
 
 		public string Enclosure { get; set; } = "";
 	}
-
 	public class CPU
 	{
 		double _score = 0;
@@ -543,7 +570,6 @@ namespace PCEnvanter
 			return n;
         }
 	}
-
 	public class Memory
 	{
 		public double Capacity { get; set; } = 0;
@@ -580,7 +606,6 @@ namespace PCEnvanter
 			return ((Capacity / (1024 * 1024 * 1024))).ToString("F1") + " GB "+ MemoryType;
 		}
 	}
-
 	public class Disk
 	{
 		double _score = 0;
@@ -682,7 +707,6 @@ namespace PCEnvanter
 		public enum DiskCapacityTier { d256, d320, d500, d1000, d2000 };
 
 	}
-
 	public class Personnel
 	{
 		public string Name { get; set; } = "";
@@ -701,19 +725,22 @@ namespace PCEnvanter
 		public string Title { get; set; } = "";
 
 	}
-
 	public class Monitor
 	{
 		public string ID { get; set; } = "";
 
 		public double Size { get; set; } = 0;
 	}
-
 	public class VideoCard
 	{
 		public string Name { get; set; } = "";
 	}
+	public class Software
+	{
+		public string Name { get; set; } = "";
 
+		public string Version { get; set; } = "";
+	}
 	public static class MyExtensions
 	{
 		public static string RemoveDiacritics(this string text)
@@ -731,21 +758,17 @@ namespace PCEnvanter
 			}
 			return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
 		}
+        public static string RegexMatch(this string text, string pattern)
+        {
+			return Regex.Match(text, pattern).Value;	
+        }
 
-		public static double Map(this double value, double fromSource, double toSource, double fromTarget, double toTarget)
+        public static double Map(this double value, double fromSource, double toSource, double fromTarget, double toTarget)
 		{
 			//value = Clamp(value, fromSource, toSource);
 			value = Math.Min(value, toSource);
 			return (value - fromSource) / (toSource - fromSource) * (toTarget - fromTarget) + fromTarget;
 		}
-
-        //public static double Map(this long value, long fromSource, long toSource, long fromTarget, long toTarget)
-        //{
-        //    //value = Clamp(value, fromSource, toSource);
-        //    value = Math.Min(value, toSource);
-        //    return (value - fromSource) / (toSource - fromSource) * (toTarget - fromTarget) + fromTarget;
-        //}
-
 
         //CLAMP
         public static int Clamp(int value, int min, int max)

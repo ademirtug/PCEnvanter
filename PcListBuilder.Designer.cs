@@ -55,6 +55,11 @@
             this.buBilgisayarıYenileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listeEksikleriniTamamlaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.excelOlarakDışaAktarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.IE = new System.Windows.Forms.ColumnHeader();
+            this.Chrome = new System.Windows.Forms.ColumnHeader();
+            this.Firefox = new System.Windows.Forms.ColumnHeader();
+            this.Java32 = new System.Windows.Forms.ColumnHeader();
+            this.Java64 = new System.Windows.Forms.ColumnHeader();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
@@ -92,16 +97,16 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.sbMessage,
             this.progressBar});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 408);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 436);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1064, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1091, 22);
             this.statusStrip1.TabIndex = 2;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // sbMessage
             // 
             this.sbMessage.Name = "sbMessage";
-            this.sbMessage.Size = new System.Drawing.Size(916, 17);
+            this.sbMessage.Size = new System.Drawing.Size(947, 17);
             this.sbMessage.Spring = true;
             this.sbMessage.Text = "Hazır.";
             this.sbMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -133,14 +138,19 @@
             this.Memory,
             this.Disk,
             this.Monitor,
-            this.Graphics});
+            this.Graphics,
+            this.IE,
+            this.Chrome,
+            this.Firefox,
+            this.Java32,
+            this.Java64});
             this.lv_pcl.ContextMenuStrip = this.contextMenuStrip1;
             this.lv_pcl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lv_pcl.FullRowSelect = true;
             this.lv_pcl.Location = new System.Drawing.Point(0, 0);
             this.lv_pcl.MultiSelect = false;
             this.lv_pcl.Name = "lv_pcl";
-            this.lv_pcl.Size = new System.Drawing.Size(1064, 408);
+            this.lv_pcl.Size = new System.Drawing.Size(1091, 436);
             this.lv_pcl.TabIndex = 3;
             this.lv_pcl.UseCompatibleStateImageBehavior = false;
             this.lv_pcl.View = System.Windows.Forms.View.Details;
@@ -252,11 +262,31 @@
             this.excelOlarakDışaAktarToolStripMenuItem.Text = "Excel Olarak Dışa Aktar...";
             this.excelOlarakDışaAktarToolStripMenuItem.Click += new System.EventHandler(this.excelOlarakDışaAktarToolStripMenuItem_Click);
             // 
+            // IE
+            // 
+            this.IE.Text = "IE";
+            // 
+            // Chrome
+            // 
+            this.Chrome.Text = "Chrome";
+            // 
+            // Firefox
+            // 
+            this.Firefox.Text = "Firefox";
+            // 
+            // Java32
+            // 
+            this.Java32.Text = "Java(32)";
+            // 
+            // Java64
+            // 
+            this.Java64.Text = "Java(64)";
+            // 
             // PcListBuilder
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1064, 430);
+            this.ClientSize = new System.Drawing.Size(1091, 458);
             this.Controls.Add(this.lv_pcl);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
@@ -303,5 +333,10 @@
         private ToolStripMenuItem listeEksikleriniTamamlaToolStripMenuItem;
         private ToolStripMenuItem excelOlarakDışaAktarToolStripMenuItem;
         private ToolStripStatusLabel sbMessage;
+        private ColumnHeader IE;
+        private ColumnHeader Chrome;
+        private ColumnHeader Firefox;
+        private ColumnHeader Java32;
+        private ColumnHeader Java64;
     }
 }
