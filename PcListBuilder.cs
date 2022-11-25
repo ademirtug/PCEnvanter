@@ -62,9 +62,7 @@ namespace PCEnvanter
 				return;
 
 			totalPc = pcNamesList.Count;
-
 			progressBar.Step = 100 / Math.Max(1, pcNamesList.Count);
-
             System.Threading.Timer tt = new System.Threading.Timer((sender) => { 
 				
 			});
