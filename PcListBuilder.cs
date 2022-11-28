@@ -94,7 +94,6 @@ namespace PCEnvanter
 					{
 					}
 				}).Start();
-
 			}
 		}
 
@@ -235,7 +234,6 @@ namespace PCEnvanter
 		{
 			selectedLvi = lv_pcl.GetItemAt(lv_pcl.PointToClient(Cursor.Position).X, lv_pcl.PointToClient(Cursor.Position).Y);
 			buBilgisayarıYenileToolStripMenuItem.Enabled = selectedLvi == null ? false : true;
-
 		}
 
 		private void buBilgisayarıYenileToolStripMenuItem_Click(object sender, EventArgs e)
@@ -291,8 +289,6 @@ namespace PCEnvanter
             progressBar.Enabled = true;
             progressBar.Value = 0;
 
-
-
             List<string> pcn = new List<string>();
             int pcc = pcl.pcl.Count;
 
@@ -304,7 +300,6 @@ namespace PCEnvanter
 
 				if(p.IP == "0.0.0.0")
 					pcn.Add(pcx);
-
             }
 
 			foreach (string pcname in pcn)
@@ -312,7 +307,6 @@ namespace PCEnvanter
 
 			foreach (PC pc in pcl.pcl)
 				cpc.Enqueue(pc);
-
 
 			progressBar.Value = (1000000 / pcc) * cpc.Count;
 
